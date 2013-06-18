@@ -45,6 +45,12 @@ public slots:
   virtual void setMRMLScene(vtkMRMLScene *newScene);
   virtual void setSessionManagerNode(vtkMRMLNode *node);
   virtual void onClickRegistration();
+  virtual void onClickReceiveRegistrationData();
+  virtual void onClickWaitForTransform();
+  virtual void onClickGravComp();
+  virtual void onClickNavGravComp();
+  virtual void onClickVirtualFixtures();
+  virtual void onClickIDLE();
 
 protected slots:
 

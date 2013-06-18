@@ -79,7 +79,7 @@ public:
   /// Get referenced connector node id
   const char *GetConnectorNodeID();
 
-  virtual void SendCommand();
+  virtual void SendCommand(std::string CommandString);
 
   
 protected:

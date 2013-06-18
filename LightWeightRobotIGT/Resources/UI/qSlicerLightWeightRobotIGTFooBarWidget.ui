@@ -50,17 +50,31 @@
    <item>
     <widget class="QPushButton" name="GravComp">
      <property name="text">
-      <string>Sending Transform to Robot</string>
+      <string>Activate Grav.Compensation</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="NavGravComp">
      <property name="text">
-      <string>Sending Transform to Robot</string>
+      <string>Activate Navigated Grav. Compensation</string>
      </property>
     </widget>
    </item>
+    <item>
+      <widget class="QPushButton" name="VirtualFixtures">
+        <property name="text">
+          <string>Activate Virtual Fixtures</string>
+        </property>
+      </widget>
+    </item>
+    <item>
+      <widget class="QPushButton" name="IDLE">
+        <property name="text">
+          <string>Reset Robot to IDLE</string>
+        </property>
+      </widget>
+    </item>
   </layout>
  </widget>
  <customwidgets>
@@ -104,6 +118,102 @@
     </hint>
    </hints>
   </connection>
+   <connection>
+     <sender>SendData</sender>
+     <signal>clicked()</signal>
+     <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+     <slot>onClickReceiveRegistrationData()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>110</x>
+         <y>51</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>110</x>
+         <y>101</y>
+       </hint>
+     </hints>
+   </connection>
+   <connection>
+     <sender>WaitforTCTBase</sender>
+     <signal>clicked()</signal>
+     <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+     <slot>onClickWaitForTransform()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>110</x>
+         <y>51</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>110</x>
+         <y>101</y>
+       </hint>
+     </hints>
+   </connection>
+   <connection>
+     <sender>GravComp</sender>
+     <signal>clicked()</signal>
+     <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+     <slot>onClickGravComp()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>110</x>
+         <y>51</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>110</x>
+         <y>101</y>
+       </hint>
+     </hints>
+   </connection>
+   <connection>
+     <sender>NavGravComp</sender>
+     <signal>clicked()</signal>
+     <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+     <slot>onClickNavGravComp()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>110</x>
+         <y>51</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>110</x>
+         <y>101</y>
+       </hint>
+     </hints>
+   </connection>
+   <connection>
+     <sender>VirtualFixtures</sender>
+     <signal>clicked()</signal>
+     <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+     <slot>onClickVirtualFixtures()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>110</x>
+         <y>51</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>110</x>
+         <y>101</y>
+       </hint>
+     </hints>
+   </connection>
+   <connection>
+     <sender>IDLE</sender>
+     <signal>clicked()</signal>
+     <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+     <slot>onClickIDLE()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>110</x>
+         <y>51</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>110</x>
+         <y>101</y>
+       </hint>
+     </hints>
+   </connection>
  </connections>
  <slots>
   <slot>setMRMLScene(vtkMRMLScene*)</slot>

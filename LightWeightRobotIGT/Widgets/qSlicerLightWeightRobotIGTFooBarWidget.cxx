@@ -119,7 +119,8 @@ void qSlicerLightWeightRobotIGTFooBarWidget::
 onClickRegistration()
 {
   Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
-
+  std::string CommandString;
+  CommandString = "Registration;4;";
   if (!d->SessionManagerNodeSelector)
     {
     return;
@@ -129,7 +130,133 @@ onClickRegistration()
   vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
   if (snode)
     {
-    snode->SendCommand();
+    snode->SendCommand(CommandString);
+    }
+
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+onClickReceiveRegistrationData()
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  std::string CommandString;
+  CommandString = "SendData;";
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (snode)
+    {
+    snode->SendCommand(CommandString);
+    }
+
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+onClickWaitForTransform()
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  std::string CommandString;
+  CommandString = "WaitforTCTBase;";
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (snode)
+    {
+    snode->SendCommand(CommandString);
+    }
+
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+onClickGravComp()
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  std::string CommandString;
+  CommandString = "GravComp;";
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (snode)
+    {
+    snode->SendCommand(CommandString);
+    }
+
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+onClickNavGravComp()
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  std::string CommandString;
+  CommandString = "NavGravComp;";
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (snode)
+    {
+    snode->SendCommand(CommandString);
+    }
+
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+onClickVirtualFixtures()
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  std::string CommandString;
+  CommandString = "VirtualFixtures;plane;0.0;0.0;15.0;0.0;0.0;1.0;";
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (snode)
+    {
+    snode->SendCommand(CommandString);
+    }
+
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+onClickIDLE()
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  std::string CommandString;
+  CommandString = "IDLE;";
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (snode)
+    {
+    snode->SendCommand(CommandString);
     }
 
 }

@@ -181,14 +181,14 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   // Register message converter
 
   vtkSmartPointer< vtkMRMLAnnotationTextNode > command = vtkSmartPointer< vtkMRMLAnnotationTextNode >::New();
-  command->SetName("COMMAND");
+  command->SetName("CMD_00000");
   scene->AddNode(command);
   cnode->RegisterOutgoingMRMLNode(command);
   this->AddAndObserveMessageNodeID(cnode->GetID());
   this->SetCommandStringNodeIDInternal(command->GetID());
 
   vtkSmartPointer< vtkMRMLLinearTransformNode > rtrans = vtkSmartPointer< vtkMRMLLinearTransformNode >::New();
-  rtrans->SetName("REGISTRATION");
+  rtrans->SetName("T_CT_Base");
   scene->AddNode(rtrans);
   cnode->RegisterOutgoingMRMLNode(rtrans);
   this->AddAndObserveMessageNodeID(cnode->GetID());
@@ -314,7 +314,7 @@ void vtkMRMLIGTLSessionManagerNode::OnNodeReferenceModified(vtkMRMLNodeReference
 
 
 //----------------------------------------------------------------------------
-void vtkMRMLIGTLSessionManagerNode::SendCommand()
+void vtkMRMLIGTLSessionManagerNode::SendCommand(std::string CommadString)
 {
 
   if (!this->GetCommandStringNodeIDInternal())
@@ -337,5 +337,5 @@ void vtkMRMLIGTLSessionManagerNode::SendCommand()
     return;
     }
 
-  tnode->SetTextLabel("TEST");
+  tnode->SetTextLabel(CommadString.data());
 }
