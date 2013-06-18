@@ -5,6 +5,7 @@ set(KIT ${PROJECT_NAME})
 set(${KIT}_EXPORT_DIRECTIVE "VTK_SLICER_${MODULE_NAME_UPPER}_MODULE_LOGIC_EXPORT")
 
 set(${KIT}_INCLUDE_DIRECTORIES
+  ${Slicer_Base_INCLUDE_DIRS}
   ${vtkSlicerLightWeightRobotIGTModuleMRML_SOURCE_DIR}
   ${vtkSlicerLightWeightRobotIGTModuleMRML_BINARY_DIR}
   )
