@@ -18,12 +18,40 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QPushButton" name="FooBarButton">
+    <widget class="QPushButton" name="Registration">
      <property name="text">
-      <string>Foo Bar</string>
+      <string>Start Registration</string>
      </property>
     </widget>
    </item>
+    <item>
+      <widget class="QPushButton" name="SendData">
+        <property name="text">
+          <string>Request Registration Data</string>
+        </property>
+      </widget>
+    </item>
+    <item>
+      <widget class="QPushButton" name="WaitforTCTBase">
+        <property name="text">
+          <string>Sending Transform to Robot</string>
+        </property>
+      </widget>
+    </item>
+    <item>
+      <widget class="QPushButton" name="GravComp">
+        <property name="text">
+          <string>Sending Transform to Robot</string>
+        </property>
+      </widget>
+    </item>
+    <item>
+      <widget class="QPushButton" name="NavGravComp">
+        <property name="text">
+          <string>Sending Transform to Robot</string>
+        </property>
+      </widget>
+    </item>
   </layout>
  </widget>
  <resources/>
