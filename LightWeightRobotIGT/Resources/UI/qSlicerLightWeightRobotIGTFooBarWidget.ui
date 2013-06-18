@@ -88,6 +88,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>Registration</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>onClickRegistration()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>110</x>
+     <y>51</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>110</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>setMRMLScene(vtkMRMLScene*)</slot>
