@@ -14,6 +14,7 @@ Program:   3D Slicer
 #include "vtkMRMLIGTLSessionManagerNode.h"
 #include "vtkMRMLIGTLConnectorNode.h"
 #include "vtkMRMLAnnotationTextNode.h"
+#include "vtkMRMLLinearTransformNode.h"
 #include "vtkIGTLToMRMLString.h"
 
 // VTK includes
@@ -30,6 +31,9 @@ vtkMRMLNodeNewMacro(vtkMRMLIGTLSessionManagerNode);
 vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
 {
   this->ConnectorNodeIDInternal = 0;
+  this->CommandStringNodeIDInternal = 0;
+  this->RegistrationTransformNodeIDInternal = 0;
+
   this->ConnectorNodeReferenceRole = 0;
   this->ConnectorNodeReferenceMRMLAttributeName = 0;
   this->MessageNodeReferenceRole = 0;
@@ -48,6 +52,7 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
                              this->GetMessageNodeReferenceMRMLAttributeName());
 
   this->StringMessageConverter = NULL;
+  
 }
 
 //----------------------------------------------------------------------------
@@ -180,6 +185,14 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   scene->AddNode(command);
   cnode->RegisterOutgoingMRMLNode(command);
   this->AddAndObserveMessageNodeID(cnode->GetID());
+  this->SetCommandStringNodeIDInternal(command->GetID());
+
+  vtkSmartPointer< vtkMRMLLinearTransformNode > rtrans = vtkSmartPointer< vtkMRMLLinearTransformNode >::New();
+  rtrans->SetName("REGISTRATION");
+  scene->AddNode(rtrans);
+  cnode->RegisterOutgoingMRMLNode(rtrans);
+  this->AddAndObserveMessageNodeID(cnode->GetID());
+  this->SetRegistrationTransformNodeIDInternal(rtrans->GetID());
 }
 
 
@@ -297,4 +310,32 @@ void vtkMRMLIGTLSessionManagerNode::OnNodeReferenceModified(vtkMRMLNodeReference
   else if (strcmp(reference->GetReferenceRole(), this->GetConnectorNodeReferenceRole()) == 0)
     {
     }
+}
+
+
+//----------------------------------------------------------------------------
+void vtkMRMLIGTLSessionManagerNode::SendCommand()
+{
+
+  if (!this->GetCommandStringNodeIDInternal())
+    {
+    return;
+    }
+
+  vtkMRMLScene* scene = this->GetScene();
+  if (!scene) 
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = scene->GetNodeByID(this->GetCommandStringNodeIDInternal());
+  
+  vtkMRMLAnnotationTextNode* tnode = vtkMRMLAnnotationTextNode::SafeDownCast(node);
+
+  if (!tnode)
+    {
+    return;
+    }
+
+  tnode->SetTextLabel("TEST");
 }

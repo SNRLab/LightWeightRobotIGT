@@ -79,6 +79,9 @@ public:
   /// Get referenced connector node id
   const char *GetConnectorNodeID();
 
+  virtual void SendCommand();
+
+  
 protected:
   vtkMRMLIGTLSessionManagerNode();
   ~vtkMRMLIGTLSessionManagerNode();
@@ -111,6 +114,15 @@ private:
   char* ConnectorNodeIDInternal;
   vtkSetStringMacro(ConnectorNodeIDInternal);
   vtkGetStringMacro(ConnectorNodeIDInternal);
+
+  char* CommandStringNodeIDInternal;
+  vtkSetStringMacro(CommandStringNodeIDInternal);
+  vtkGetStringMacro(CommandStringNodeIDInternal);
+
+  char* RegistrationTransformNodeIDInternal;
+  vtkSetStringMacro(RegistrationTransformNodeIDInternal);
+  vtkGetStringMacro(RegistrationTransformNodeIDInternal);
+
 
   vtkIGTLToMRMLString * StringMessageConverter;
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>103</width>
-    <height>27</height>
+    <width>221</width>
+    <height>204</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,42 +18,80 @@
     <number>0</number>
    </property>
    <item>
+    <widget class="qMRMLNodeComboBox" name="SessionManagerNodeSelector">
+     <property name="nodeTypes">
+      <stringlist>
+       <string>vtkMRMLIGTLSessionManagerNode</string>
+      </stringlist>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="Registration">
      <property name="text">
       <string>Start Registration</string>
      </property>
     </widget>
    </item>
-    <item>
-      <widget class="QPushButton" name="SendData">
-        <property name="text">
-          <string>Request Registration Data</string>
-        </property>
-      </widget>
-    </item>
-    <item>
-      <widget class="QPushButton" name="WaitforTCTBase">
-        <property name="text">
-          <string>Sending Transform to Robot</string>
-        </property>
-      </widget>
-    </item>
-    <item>
-      <widget class="QPushButton" name="GravComp">
-        <property name="text">
-          <string>Sending Transform to Robot</string>
-        </property>
-      </widget>
-    </item>
-    <item>
-      <widget class="QPushButton" name="NavGravComp">
-        <property name="text">
-          <string>Sending Transform to Robot</string>
-        </property>
-      </widget>
-    </item>
+   <item>
+    <widget class="QPushButton" name="SendData">
+     <property name="text">
+      <string>Request Registration Data</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="WaitforTCTBase">
+     <property name="text">
+      <string>Sending Transform to Robot</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="GravComp">
+     <property name="text">
+      <string>Sending Transform to Robot</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="NavGravComp">
+     <property name="text">
+      <string>Sending Transform to Robot</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qMRMLNodeComboBox</class>
+   <extends>QWidget</extends>
+   <header>qMRMLNodeComboBox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>SessionManagerNodeSelector</sender>
+   <signal>currentNodeChanged(vtkMRMLNode*)</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>setSessionManagerNode(vtkMRMLNode*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>110</x>
+     <y>12</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>110</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>setMRMLScene(vtkMRMLScene*)</slot>
+  <slot>setSessionManagerNode(vtkMRMLNode*)</slot>
+  <slot>onClickRegistration()</slot>
+ </slots>
 </ui>

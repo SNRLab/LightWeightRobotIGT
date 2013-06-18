@@ -26,18 +26,25 @@
 
 // FooBar Widgets includes
 #include "qSlicerLightWeightRobotIGTModuleWidgetsExport.h"
+#include "qSlicerWidget.h"
 
 class qSlicerLightWeightRobotIGTFooBarWidgetPrivate;
+class vtkMRMLNode;
 
 /// \ingroup Slicer_QtModules_LightWeightRobotIGT
 class Q_SLICER_MODULE_LIGHTWEIGHTROBOTIGT_WIDGETS_EXPORT qSlicerLightWeightRobotIGTFooBarWidget
-  : public QWidget
+  : public qSlicerWidget
 {
   Q_OBJECT
 public:
-  typedef QWidget Superclass;
+  typedef qSlicerWidget Superclass;
   qSlicerLightWeightRobotIGTFooBarWidget(QWidget *parent=0);
   virtual ~qSlicerLightWeightRobotIGTFooBarWidget();
+
+public slots:
+  virtual void setMRMLScene(vtkMRMLScene *newScene);
+  virtual void setSessionManagerNode(vtkMRMLNode *node);
+  virtual void onClickRegistration();
 
 protected slots:
 

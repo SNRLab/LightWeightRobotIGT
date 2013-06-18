@@ -19,8 +19,14 @@
 ==============================================================================*/
 
 // FooBar Widgets includes
+#include "vtkMRMLNode.h"
+
 #include "qSlicerLightWeightRobotIGTFooBarWidget.h"
 #include "ui_qSlicerLightWeightRobotIGTFooBarWidget.h"
+
+#include "vtkMRMLIGTLSessionManagerNode.h"
+#include "vtkMRMLIGTLConnectorNode.h"
+
 
 //-----------------------------------------------------------------------------
 /// \ingroup Slicer_QtModules_LightWeightRobotIGT
@@ -69,4 +75,61 @@ qSlicerLightWeightRobotIGTFooBarWidget
 qSlicerLightWeightRobotIGTFooBarWidget
 ::~qSlicerLightWeightRobotIGTFooBarWidget()
 {
+}
+
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+setMRMLScene(vtkMRMLScene *newScene)
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  Superclass::setMRMLScene(newScene);
+
+  d->SessionManagerNodeSelector->setMRMLScene(newScene);
+  
+}
+
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+setSessionManagerNode(vtkMRMLNode *node)
+{
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (!snode)
+    {
+    return;
+    }
+  if (!this->mrmlScene())
+    {
+    return;
+    }
+  
+  if (!snode->GetConnectorNodeID())
+    {
+    vtkSmartPointer< vtkMRMLIGTLConnectorNode > cnode = vtkSmartPointer< vtkMRMLIGTLConnectorNode >::New();
+    this->mrmlScene()->AddNode(cnode);
+    snode->SetAndObserveConnectorNodeID(cnode->GetID());
+    }
+
+}
+
+
+//-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::
+onClickRegistration()
+{
+  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if (snode)
+    {
+    snode->SendCommand();
+    }
+
 }
