@@ -31,6 +31,67 @@
 class qSlicerLightWeightRobotIGTFooBarWidgetPrivate;
 class vtkMRMLNode;
 
+//Structs for the Options for the different States
+//VirtualFixtures Options
+// - position of the plane/cone X,Y,Z
+// - normal vector of the plane/cone nX, nY, nZ
+// - Virtual Fixture type VFType =plane/cone;
+struct VirtualFixturesOptions{
+	std::string X;
+	std::string Y;
+	std::string Z;
+	std::string nX;
+	std::string nY;
+	std::string nZ;
+	std::string VFType;
+	std::string COFType;
+
+};
+
+//MoveToPose Options
+// - position of end point X,Y,Z
+// - Orientation of endpoint (RPY) A, B, C
+// - Coordinate System used COFType=Imagespace/robbase;
+struct MoveToPoseOptions{
+	std::string X;
+	std::string Y;
+	std::string Z;
+	std::string A;
+	std::string B;
+	std::string C;
+	std::string COFType;
+
+};
+//PathImp Options
+// - position of end point X,Y,Z
+// - Coordinate System used COFType=Imagespace/robbase;
+struct PathImpOptions{
+	std::string X;
+	std::string Y;
+	std::string Z;
+	std::string COFType;
+
+};
+//Visualization Options
+// - Coordinate System used COFType=Imagespace/robbase/Jointspace;
+struct VisualizationOptions{
+	std::string COFType;
+
+};
+
+//Registration Options
+// - Number of pointsto register PointstoRegister;
+struct RegistrationOptions{
+	std::string PointstoRegister;
+
+};
+
+//Registration Options
+// - Number of pointsto register PointstoRegister;
+struct SendDataOptions{
+	std::string Datatype;
+
+};
 /// \ingroup Slicer_QtModules_LightWeightRobotIGT
 class Q_SLICER_MODULE_LIGHTWEIGHTROBOTIGT_WIDGETS_EXPORT qSlicerLightWeightRobotIGTFooBarWidget
   : public qSlicerWidget
@@ -40,6 +101,14 @@ public:
   typedef qSlicerWidget Superclass;
   qSlicerLightWeightRobotIGTFooBarWidget(QWidget *parent=0);
   virtual ~qSlicerLightWeightRobotIGTFooBarWidget();
+  
+  RegistrationOptions RegOptions;
+  VisualizationOptions VisualOptions;
+  PathImpOptions PIOptions;
+  MoveToPoseOptions MPOptions;
+  VirtualFixturesOptions VFOptions;
+  SendDataOptions SDOptions;
+
 
 public slots:
   virtual void setMRMLScene(vtkMRMLScene *newScene);
@@ -48,9 +117,36 @@ public slots:
   virtual void onClickReceiveRegistrationData();
   virtual void onClickWaitForTransform();
   virtual void onClickGravComp();
-  virtual void onClickNavGravComp();
   virtual void onClickVirtualFixtures();
   virtual void onClickIDLE();
+  virtual void onClickStartVisual();
+  virtual void onClickStopVisual();
+  virtual void onClickShutdown();
+  virtual void onClickQuit();
+  virtual void onClickPathImp();
+  virtual void onClickMoveToPose();
+  virtual void onSelectionChangedVFx(QString);
+  virtual void onSelectionChangedVFy(QString);
+  virtual void onSelectionChangedVFz(QString);
+  virtual void onSelectionChangedVFnx(QString);
+  virtual void onSelectionChangedVFny(QString);
+  virtual void onSelectionChangedVFnz(QString);
+  virtual void onSelectionChangedMPx(QString);
+  virtual void onSelectionChangedMPy(QString);
+  virtual void onSelectionChangedMPz(QString);
+  virtual void onSelectionChangedMPA(QString);
+  virtual void onSelectionChangedMPB(QString);
+  virtual void onSelectionChangedMPC(QString);
+  virtual void onSelectionChangedPIx(QString);
+  virtual void onSelectionChangedPIy(QString);
+  virtual void onSelectionChangedPIz(QString);
+  virtual void onValueChangedPointsRegister(int);
+  virtual void onIndexChangedSendDataType(int);
+  virtual void onIndexChangedVFtype(int);
+  virtual void onIndexChangedVFCOFrame(int);
+  virtual void onIndexChangedPICOFrame(int);
+  virtual void onIndexChangedMPCOFrame(int);
+  virtual void onIndexChangedVisualCOFrame(int);
 
 protected slots:
 

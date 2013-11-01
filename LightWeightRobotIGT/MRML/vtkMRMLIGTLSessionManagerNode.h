@@ -18,6 +18,9 @@
 
 class vtkIGTLToMRMLString;
 
+
+
+
 /// \brief MRML node to manage OpenIGTLink 
 ///
 /// Configure vtkMRMLIGTLConnectorNode and manage incoming and outgoing
@@ -32,6 +35,7 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent);
 
   virtual vtkMRMLNode* CreateNodeInstance();
+  
 
   /// 
   /// Read node attributes from XML file
@@ -80,7 +84,6 @@ public:
   const char *GetConnectorNodeID();
 
   virtual void SendCommand(std::string CommandString);
-
   
 protected:
   vtkMRMLIGTLSessionManagerNode();

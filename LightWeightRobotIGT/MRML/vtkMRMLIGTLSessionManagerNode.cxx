@@ -33,7 +33,7 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
   this->ConnectorNodeIDInternal = 0;
   this->CommandStringNodeIDInternal = 0;
   this->RegistrationTransformNodeIDInternal = 0;
-
+	
   this->ConnectorNodeReferenceRole = 0;
   this->ConnectorNodeReferenceMRMLAttributeName = 0;
   this->MessageNodeReferenceRole = 0;
