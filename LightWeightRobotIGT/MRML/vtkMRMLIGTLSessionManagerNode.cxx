@@ -52,6 +52,7 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
                              this->GetMessageNodeReferenceMRMLAttributeName());
 
   this->StringMessageConverter = NULL;
+  this->UID = 0;
   
 }
 
@@ -162,8 +163,13 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
       scene->RemoveNode(node);
       }
     else
-      {
-      cnode->UnregisterIncomingMRMLNode(node);
+	{
+		/*cnode->G
+		cnode->RegisterIncomingMRMLNode(node);
+		vtkSmartPointer< vtkMRMLAnnotationTextNode > acknowledge = vtkSmartPointer< vtkMRMLAnnotationTextNode >::New();
+		//acknowledge->SetName();
+		this->AddAndObserveMessageNodeID(cnode->GetID());
+		this->SetRegistrationTransformNodeIDInternal(node->GetID());*/
       }
     }
 
@@ -181,7 +187,10 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   // Register message converter
 
   vtkSmartPointer< vtkMRMLAnnotationTextNode > command = vtkSmartPointer< vtkMRMLAnnotationTextNode >::New();
-  command->SetName("CMD_00000");
+  std:: stringstream ss;
+  ss << UID;
+  std::string TmpCmd = "CMD_" + ss.str();
+  command->SetName(TmpCmd.c_str());
   scene->AddNode(command);
   cnode->RegisterOutgoingMRMLNode(command);
   this->AddAndObserveMessageNodeID(cnode->GetID());
@@ -193,6 +202,12 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   cnode->RegisterOutgoingMRMLNode(rtrans);
   this->AddAndObserveMessageNodeID(cnode->GetID());
   this->SetRegistrationTransformNodeIDInternal(rtrans->GetID());
+
+  /*vtkSmartPointer< vtkMRMLAnnotationTextNode > acknowledge = vtkSmartPointer< vtkMRMLAnnotationTextNode >::New();
+  scene->AddNode(acknowledge);
+  cnode->RegisterIncomingMRMLNode(acknowledge);
+  this->AddAndObserveMessageNodeID(cnode->GetID());
+  this->SetAcknowledgeStringNodeIDInternal(acknowledge->GetID());*/
 }
 
 
@@ -224,7 +239,50 @@ void vtkMRMLIGTLSessionManagerNode::ProcessMRMLEvents ( vtkObject *caller,
 {
   // as retrieving the parent transform node can be costly (browse the scene)
   // do some checks here to prevent retrieving the node for nothing.
-  if (caller == NULL ||
+	if (caller != NULL)
+    {
+
+		vtkMRMLIGTLConnectorNode* cnode = vtkMRMLIGTLConnectorNode::SafeDownCast(caller);
+		if (cnode && event == vtkMRMLIGTLConnectorNode::DeviceModifiedEvent){
+			  int nnodes;
+
+			 // Incoming nodes
+			  nnodes = cnode->GetNumberOfIncomingMRMLNodes();
+			  for (int i = 0; i < nnodes; i ++)
+				{
+				vtkMRMLNode* inode = cnode->GetIncomingMRMLNode(i);
+				if (inode)
+				  {
+					  
+					   vtkMRMLScene* scene = this->GetScene();
+						  if (!scene) 
+							{
+							return;
+							}
+
+						  vtkMRMLNode* node = scene->GetNodeByID(this->GetCommandStringNodeIDInternal());
+						  
+						  vtkMRMLAnnotationTextNode* tnode = vtkMRMLAnnotationTextNode::SafeDownCast(node);
+
+						  if (!tnode)
+							{
+							return;
+							}
+						  //Added for performance test...delete later on
+						  if(strcmp(tnode->GetTextLabel(), "GravComp;")){
+							this->SendCommand( "IDLE;");
+						  }else if(strcmp(tnode->GetTextLabel(), "IDLE;")){
+							  this->SendCommand( "GravComp;");
+						  }
+					  if(strcmp(inode->GetClassName(),"vtkMRMLAnnotationTextNode")){
+
+						 
+					  }
+
+				  }
+				}
+		}
+	}else if (caller == NULL ||
       (event != vtkCommand::ModifiedEvent && 
       event != vtkMRMLIGTLSessionManagerNode::TransformModifiedEvent))
     {
@@ -336,6 +394,11 @@ void vtkMRMLIGTLSessionManagerNode::SendCommand(std::string CommadString)
     {
     return;
     }
-
+  std::stringstream ss;
+  ss << this->UID;
+  std::string TmpCmd = "CMD_" + ss.str();
+  tnode->SetName(TmpCmd.c_str());
   tnode->SetTextLabel(CommadString.data());
+
+  this->UID++;
 }

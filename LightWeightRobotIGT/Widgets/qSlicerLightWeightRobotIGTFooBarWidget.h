@@ -45,6 +45,7 @@ struct VirtualFixturesOptions{
 	std::string nZ;
 	std::string VFType;
 	std::string COFType;
+	std::string phi;
 
 };
 
@@ -113,9 +114,6 @@ public:
 public slots:
   virtual void setMRMLScene(vtkMRMLScene *newScene);
   virtual void setSessionManagerNode(vtkMRMLNode *node);
-  virtual void onClickRegistration();
-  virtual void onClickReceiveRegistrationData();
-  virtual void onClickWaitForTransform();
   virtual void onClickGravComp();
   virtual void onClickVirtualFixtures();
   virtual void onClickIDLE();

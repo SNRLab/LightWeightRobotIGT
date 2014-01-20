@@ -82,7 +82,7 @@ public:
 
   /// Get referenced connector node id
   const char *GetConnectorNodeID();
-
+  unsigned long UID;
   virtual void SendCommand(std::string CommandString);
   
 protected:
@@ -125,6 +125,10 @@ private:
   char* RegistrationTransformNodeIDInternal;
   vtkSetStringMacro(RegistrationTransformNodeIDInternal);
   vtkGetStringMacro(RegistrationTransformNodeIDInternal);
+
+  char* AcknowledgeStringNodeIDInternal;
+  vtkSetStringMacro(AcknowledgeStringNodeIDInternal);
+  vtkGetStringMacro(AcknowledgeStringNodeIDInternal);
 
 
   vtkIGTLToMRMLString * StringMessageConverter;

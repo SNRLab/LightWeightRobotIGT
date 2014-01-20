@@ -79,13 +79,13 @@ qSlicerLightWeightRobotIGTFooBarWidget
 
   //Path Impedance
   PIOptions.COFType = "rob";
-  PIOptions.X = "400";
+  PIOptions.X = "500";
   PIOptions.Y = "0";
-  PIOptions.Z = "500";
+  PIOptions.Z = "400";
 
   //Move to Pose
   MPOptions.COFType = "rob";
-  MPOptions.X = "400";
+  MPOptions.X = "500";
   MPOptions.Y = "0";
   MPOptions.Z = "500";
   MPOptions.A = "0";
@@ -94,12 +94,14 @@ qSlicerLightWeightRobotIGTFooBarWidget
   
   //Virtual Fixtures
   VFOptions.COFType= "rob";
-  VFOptions.X = "400";
+  VFOptions.VFType = "plane";
+  VFOptions.X = "500";
   VFOptions.Y = "0";
-  VFOptions.Z = "0";
+  VFOptions.Z = "100";
   VFOptions.nX = "0";
   VFOptions.nY = "0";
   VFOptions.nZ = "1";
+  VFOptions.phi = "90";
 
 }
 
@@ -148,69 +150,6 @@ setSessionManagerNode(vtkMRMLNode *node)
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::
-onClickRegistration()
-{
-  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
-  std::string CommandString;
-  CommandString = "Registration;" +RegOptions.PointstoRegister+";";
-  if (!d->SessionManagerNodeSelector)
-    {
-    return;
-    }
-
-  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
-  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
-  if (snode)
-    {
-    snode->SendCommand(CommandString);
-    }
-
-}
-
-//-----------------------------------------------------------------------------
-void qSlicerLightWeightRobotIGTFooBarWidget::
-onClickReceiveRegistrationData()
-{
-  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
-  std::string CommandString;
-  CommandString = "SendData;" + SDOptions.Datatype + ";";
-  if (!d->SessionManagerNodeSelector)
-    {
-    return;
-    }
-
-  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
-  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
-  if (snode)
-    {
-    snode->SendCommand(CommandString);
-    }
-
-}
-
-//-----------------------------------------------------------------------------
-void qSlicerLightWeightRobotIGTFooBarWidget::
-onClickWaitForTransform()
-{
-  Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
-  std::string CommandString;
-  CommandString = "WaitforTCTBase;";
-  if (!d->SessionManagerNodeSelector)
-    {
-    return;
-    }
-
-  vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
-  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
-  if (snode)
-    {
-    snode->SendCommand(CommandString);
-    }
-
-}
-
-//-----------------------------------------------------------------------------
-void qSlicerLightWeightRobotIGTFooBarWidget::
 onClickGravComp()
 {
   Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
@@ -237,6 +176,10 @@ onClickVirtualFixtures()
   Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
   std::string CommandString;
   CommandString = "VirtualFixtures;" + VFOptions.COFType+";"+ VFOptions.VFType +";"  + VFOptions.X +";" + VFOptions.Y +";" + VFOptions.Z + ";"+ VFOptions.nX +";" + VFOptions.nY +";" + VFOptions.nZ + ";" ;
+  if(VFOptions.VFType == "cone"){
+	  CommandString = CommandString + VFOptions.phi;
+  }
+  
   if (!d->SessionManagerNodeSelector)
     {
     return;
@@ -277,7 +220,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget:: onClickStartVisual()
 {
 	 Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
   std::string CommandString;
-  CommandString = "StartVisual;true;"+ VisualOptions.COFType +";";
+  CommandString = "Visual;true;"+ VisualOptions.COFType +";";
   if (!d->SessionManagerNodeSelector)
     {
     return;
@@ -297,7 +240,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget:: onClickStopVisual()
 {
 	 Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
   std::string CommandString;
-  CommandString = "StartVisual;false;" + VisualOptions.COFType +";";
+  CommandString = "Visual;false;" + VisualOptions.COFType +";";
   if (!d->SessionManagerNodeSelector)
     {
     return;
@@ -464,7 +407,18 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedPIz(QString editT
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onValueChangedPointsRegister(int Value){
-	RegOptions.PointstoRegister = Value;
+
+
+	
+	std::string Result;//string which will contain the result
+
+	std::stringstream convert; // stringstream used for the conversion
+
+	convert << Value;//add the value of Number to the characters in the stream
+
+	Result = convert.str();//set Result to the content of the stream
+
+	RegOptions.PointstoRegister = Result;
 }
 
 //-----------------------------------------------------------------------------
@@ -546,16 +500,16 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onIndexChangedMPCOFrame(int index){
 void qSlicerLightWeightRobotIGTFooBarWidget::onIndexChangedVisualCOFrame(int index){
 	switch (index) {
 		 case 0:
-			VFOptions.COFType = "rob";
+			VisualOptions.COFType = "rob";
 			 break;
 		 case 1:
-			 VFOptions.COFType = "img";
+			 VisualOptions.COFType = "img";
 			 break;
 		 case 2:
-			 VFOptions.COFType = "jnt";
+			 VisualOptions.COFType = "jnt";
 			 break;
 		 default:
-			 VFOptions.COFType = "rob";
+			 VisualOptions.COFType = "img";
 			 break;
 		 }
 }
