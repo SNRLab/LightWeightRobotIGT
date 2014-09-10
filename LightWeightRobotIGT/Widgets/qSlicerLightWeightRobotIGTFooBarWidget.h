@@ -30,6 +30,7 @@
 
 class qSlicerLightWeightRobotIGTFooBarWidgetPrivate;
 class vtkMRMLNode;
+// MRML includes
 
 //Structs for the Options for the different States
 //VirtualFixtures Options
@@ -37,14 +38,10 @@ class vtkMRMLNode;
 // - normal vector of the plane/cone nX, nY, nZ
 // - Virtual Fixture type VFType =plane/cone;
 struct VirtualFixturesOptions{
-	std::string X;
-	std::string Y;
-	std::string Z;
 	std::string nX;
 	std::string nY;
 	std::string nZ;
 	std::string VFType;
-	std::string COFType;
 	std::string phi;
 
 };
@@ -60,8 +57,6 @@ struct MoveToPoseOptions{
 	std::string A;
 	std::string B;
 	std::string C;
-	std::string COFType;
-
 };
 //PathImp Options
 // - position of end point X,Y,Z
@@ -70,9 +65,9 @@ struct PathImpOptions{
 	std::string X;
 	std::string Y;
 	std::string Z;
-	std::string COFType;
-
 };
+
+
 //Visualization Options
 // - Coordinate System used COFType=Imagespace/robbase/Jointspace;
 struct VisualizationOptions{
@@ -80,19 +75,7 @@ struct VisualizationOptions{
 
 };
 
-//Registration Options
-// - Number of pointsto register PointstoRegister;
-struct RegistrationOptions{
-	std::string PointstoRegister;
 
-};
-
-//Registration Options
-// - Number of pointsto register PointstoRegister;
-struct SendDataOptions{
-	std::string Datatype;
-
-};
 /// \ingroup Slicer_QtModules_LightWeightRobotIGT
 class Q_SLICER_MODULE_LIGHTWEIGHTROBOTIGT_WIDGETS_EXPORT qSlicerLightWeightRobotIGTFooBarWidget
   : public qSlicerWidget
@@ -103,26 +86,28 @@ public:
   qSlicerLightWeightRobotIGTFooBarWidget(QWidget *parent=0);
   virtual ~qSlicerLightWeightRobotIGTFooBarWidget();
   
-  RegistrationOptions RegOptions;
   VisualizationOptions VisualOptions;
+  VirtualFixturesOptions VFOptions;
   PathImpOptions PIOptions;
   MoveToPoseOptions MPOptions;
-  VirtualFixturesOptions VFOptions;
-  SendDataOptions SDOptions;
+
 
 
 public slots:
   virtual void setMRMLScene(vtkMRMLScene *newScene);
   virtual void setSessionManagerNode(vtkMRMLNode *node);
+  virtual void CreateFiducial();
+  virtual void onClickStartCyclic();
+  virtual void OnClickLoadRobot();
   virtual void onClickGravComp();
   virtual void onClickVirtualFixtures();
   virtual void onClickIDLE();
   virtual void onClickStartVisual();
   virtual void onClickStopVisual();
   virtual void onClickShutdown();
-  virtual void onClickQuit();
   virtual void onClickPathImp();
   virtual void onClickMoveToPose();
+  virtual void OnClickShowTCPForce();
   virtual void onSelectionChangedVFx(QString);
   virtual void onSelectionChangedVFy(QString);
   virtual void onSelectionChangedVFz(QString);
@@ -135,15 +120,7 @@ public slots:
   virtual void onSelectionChangedMPA(QString);
   virtual void onSelectionChangedMPB(QString);
   virtual void onSelectionChangedMPC(QString);
-  virtual void onSelectionChangedPIx(QString);
-  virtual void onSelectionChangedPIy(QString);
-  virtual void onSelectionChangedPIz(QString);
-  virtual void onValueChangedPointsRegister(int);
-  virtual void onIndexChangedSendDataType(int);
   virtual void onIndexChangedVFtype(int);
-  virtual void onIndexChangedVFCOFrame(int);
-  virtual void onIndexChangedPICOFrame(int);
-  virtual void onIndexChangedMPCOFrame(int);
   virtual void onIndexChangedVisualCOFrame(int);
 
 protected slots:

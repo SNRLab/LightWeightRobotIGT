@@ -84,9 +84,12 @@ public:
   const char *GetConnectorNodeID();
   unsigned long UID;
   virtual void SendCommand(std::string CommandString);
-  
-protected:
-  vtkMRMLIGTLSessionManagerNode();
+  void ObserveAcknowledgeString();
+  void VirtFixOn(std::string name);
+  void VirtFixOff();
+  bool finish;
+    
+	vtkMRMLIGTLSessionManagerNode();
   ~vtkMRMLIGTLSessionManagerNode();
   vtkMRMLIGTLSessionManagerNode(const vtkMRMLIGTLSessionManagerNode&);
   void operator=(const vtkMRMLIGTLSessionManagerNode&);
@@ -113,18 +116,22 @@ protected:
   vtkGetStringMacro(MessageNodeReferenceMRMLAttributeName);
 
 
-private:
   char* ConnectorNodeIDInternal;
   vtkSetStringMacro(ConnectorNodeIDInternal);
   vtkGetStringMacro(ConnectorNodeIDInternal);
 
-  char* CommandStringNodeIDInternal;
+ 
+   char* CommandStringNodeIDInternal;
   vtkSetStringMacro(CommandStringNodeIDInternal);
   vtkGetStringMacro(CommandStringNodeIDInternal);
 
-  char* RegistrationTransformNodeIDInternal;
+   char* RegistrationTransformNodeIDInternal;
   vtkSetStringMacro(RegistrationTransformNodeIDInternal);
   vtkGetStringMacro(RegistrationTransformNodeIDInternal);
+ 
+  char* SensorTransformNodeIDInternal;
+  vtkSetStringMacro(SensorTransformNodeIDInternal);
+  vtkGetStringMacro(SensorTransformNodeIDInternal);
 
   char* AcknowledgeStringNodeIDInternal;
   vtkSetStringMacro(AcknowledgeStringNodeIDInternal);

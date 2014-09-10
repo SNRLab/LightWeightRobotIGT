@@ -18,6 +18,7 @@
 // LightWeightRobotIGT Logic includes
 #include "vtkSlicerLightWeightRobotIGTLogic.h"
 #include "vtkMRMLIGTLSessionManagerNode.h"
+#include <vtkMRMLLinearTransformNode.h>
 
 // MRML includes
 
@@ -63,7 +64,9 @@ void vtkSlicerLightWeightRobotIGTLogic::RegisterNodes()
 
   vtkMRMLScene * scene = this->GetMRMLScene();
   scene->RegisterNodeClass(vtkNew< vtkMRMLIGTLSessionManagerNode >().GetPointer());
-  std::cerr << "Registering Nodes" << std::endl;
+  std::cerr << "Registering Connector Nodes" << std::endl;
+  scene->RegisterNodeClass(vtkNew< vtkMRMLLinearTransformNode >().GetPointer());
+  std::cerr << "Registering Transform Nodes" << std::endl;
 }
 
 //---------------------------------------------------------------------------

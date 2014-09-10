@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>492</width>
+    <width>418</width>
     <height>807</height>
    </rect>
   </property>
@@ -34,19 +34,16 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_5">
+    <widget class="QPushButton" name="StartCyclic">
      <property name="text">
-      <string>LWR State Control</string>
+      <string>Start cyclic communication</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QTextBrowser" name="AckString"/>
-   </item>
-   <item>
     <widget class="QLabel" name="label_20">
      <property name="text">
-      <string>Init Phase</string>
+      <string>Visualisation</string>
      </property>
     </widget>
    </item>
@@ -54,6 +51,13 @@
     <widget class="QPushButton" name="StartVisual">
      <property name="text">
       <string>Start Visisualization</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="StopVisual">
+     <property name="text">
+      <string>Stop Visualization</string>
      </property>
     </widget>
    </item>
@@ -84,6 +88,30 @@
     </widget>
    </item>
    <item>
+    <widget class="QLineEdit" name="LineEditRobotPath">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>C:\\</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="LoadRobot">
+     <property name="text">
+      <string>Load Robot STL</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="TCPForce">
+     <property name="text">
+      <string>Show TCP Force</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="Line" name="line_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -99,11 +127,11 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_GravComp">
       <attribute name="title">
-       <string>GravComp</string>
+       <string>Registration</string>
       </attribute>
       <widget class="QPushButton" name="GravComp">
        <property name="geometry">
@@ -115,19 +143,32 @@
         </rect>
        </property>
        <property name="text">
-        <string> Grav.Compensation</string>
+        <string>Free</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="GetFiducial">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>10</y>
+         <width>231</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Get Fiducial from Robot</string>
        </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab_VF">
       <attribute name="title">
-       <string>Virtual Fix.</string>
+       <string>Prepositioning</string>
       </attribute>
       <widget class="QPushButton" name="VirtualFixtures">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>10</y>
+         <y>100</y>
          <width>161</width>
          <height>23</height>
         </rect>
@@ -136,24 +177,11 @@
         <string>Virtual Fixtures</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_12">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>101</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>COFrame</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_13">
        <property name="geometry">
         <rect>
          <x>230</x>
-         <y>40</y>
+         <y>10</y>
          <width>21</width>
          <height>20</height>
         </rect>
@@ -162,31 +190,11 @@
         <string>n</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_VFCOF">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>90</y>
-         <width>111</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>Imagespace</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Robbase</string>
-        </property>
-       </item>
-      </widget>
       <widget class="QLabel" name="label_14">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>40</y>
+         <y>10</y>
          <width>71</width>
          <height>16</height>
         </rect>
@@ -198,8 +206,8 @@
       <widget class="QComboBox" name="comboBox_VFtype">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>90</y>
+         <x>70</x>
+         <y>60</y>
          <width>101</width>
          <height>22</height>
         </rect>
@@ -218,8 +226,8 @@
       <widget class="QLabel" name="label_15">
        <property name="geometry">
         <rect>
-         <x>210</x>
-         <y>90</y>
+         <x>10</x>
+         <y>60</y>
          <width>61</width>
          <height>16</height>
         </rect>
@@ -232,7 +240,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>60</y>
+         <y>30</y>
          <width>51</width>
          <height>20</height>
         </rect>
@@ -242,7 +250,7 @@
        <property name="geometry">
         <rect>
          <x>70</x>
-         <y>60</y>
+         <y>30</y>
          <width>51</width>
          <height>20</height>
         </rect>
@@ -252,7 +260,7 @@
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>60</y>
+         <y>30</y>
          <width>51</width>
          <height>20</height>
         </rect>
@@ -262,7 +270,7 @@
        <property name="geometry">
         <rect>
          <x>230</x>
-         <y>60</y>
+         <y>30</y>
          <width>51</width>
          <height>20</height>
         </rect>
@@ -272,7 +280,7 @@
        <property name="geometry">
         <rect>
          <x>290</x>
-         <y>60</y>
+         <y>30</y>
          <width>51</width>
          <height>20</height>
         </rect>
@@ -282,16 +290,29 @@
        <property name="geometry">
         <rect>
          <x>350</x>
-         <y>60</y>
+         <y>30</y>
          <width>51</width>
          <height>20</height>
         </rect>
        </property>
       </widget>
+      <widget class="QPushButton" name="PathImp">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>100</y>
+         <width>171</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Path Impedance Control</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Move to</string>
+       <string>Targeting</string>
       </attribute>
       <widget class="QPushButton" name="MoveToPose">
        <property name="geometry">
@@ -306,19 +327,6 @@
         <string>Move to Pose</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_9">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>101</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>COFrame</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_10">
        <property name="geometry">
         <rect>
@@ -331,26 +339,6 @@
        <property name="text">
         <string>A, B, C</string>
        </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_MPCOF">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>90</y>
-         <width>121</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>Imagespace</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Robbase</string>
-        </property>
-       </item>
       </widget>
       <widget class="QLabel" name="label_11">
        <property name="geometry">
@@ -426,100 +414,6 @@
        </property>
       </widget>
      </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>PathImp</string>
-      </attribute>
-      <widget class="QPushButton" name="PathImp">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>161</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Path Impedance Control</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_PICOF">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>90</y>
-         <width>121</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>Imagespace</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Robbase</string>
-        </property>
-       </item>
-      </widget>
-      <widget class="QLabel" name="label_6">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>50</y>
-         <width>71</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>End Point x,y,z</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_7">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>101</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>COFrame</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_PIx">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>50</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_PIy">
-       <property name="geometry">
-        <rect>
-         <x>170</x>
-         <y>50</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_PIz">
-       <property name="geometry">
-        <rect>
-         <x>250</x>
-         <y>50</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
     </widget>
    </item>
    <item>
@@ -536,20 +430,6 @@
      </property>
      <property name="text">
       <string>Shutting Down State Machine</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="Quit">
-     <property name="text">
-      <string>Stop Statemachine</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="StopVisual">
-     <property name="text">
-      <string>Stop Visualization</string>
      </property>
     </widget>
    </item>
@@ -684,22 +564,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>Quit</sender>
-   <signal>clicked()</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onClickQuit()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>265</x>
-     <y>591</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>ShutDown</sender>
    <signal>clicked()</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
@@ -804,54 +668,6 @@
     <hint type="sourcelabel">
      <x>207</x>
      <y>431</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_PIx</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedPIx(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>177</x>
-     <y>421</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_PIy</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedPIy(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>257</x>
-     <y>421</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_PIz</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedPIz(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>337</x>
-     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>253</x>
@@ -972,54 +788,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>comboBox_MPCOF</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onIndexChangedMPCOFrame(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>202</x>
-     <y>462</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>comboBox_PICOF</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onIndexChangedPICOFrame(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>202</x>
-     <y>462</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>comboBox_VFCOF</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onIndexChangedVFCOFrame(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>197</x>
-     <y>462</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>comboBox_VFtype</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
@@ -1051,23 +819,87 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>GetFiducial</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>CreateFiducial() </slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>51</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>245</x>
+     <y>403</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>LoadRobot</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>OnClickLoadRobot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>173</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>245</x>
+     <y>403</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>StartCyclic</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>onClickStartCyclic()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>245</x>
+     <y>403</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TCPForce</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>OnClickShowTCPForce()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>309</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>245</x>
+     <y>403</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>setMRMLScene(vtkMRMLScene*)</slot>
-  <slot>setSessionManagerNode(vtkMRMLNode*)</slot>
-  <slot>onClickRegistration()</slot>
-  <slot>onClickReceiveRegistrationData()</slot>
-  <slot>onClickWaitForTransform()</slot>
+  <slot>setMRMLScene(vtkMRMLScene *newScene)</slot>
+  <slot>setSessionManagerNode(vtkMRMLNode *node)</slot>
+  <slot>CreateFiducial()</slot>
+  <slot>onClickStartCyclic()</slot>
+  <slot>OnClickLoadRobot()</slot>
   <slot>onClickGravComp()</slot>
-  <slot>onClickNavGravComp()</slot>
   <slot>onClickVirtualFixtures()</slot>
   <slot>onClickIDLE()</slot>
-  <slot>onClickPathImp()</slot>
-  <slot>onClickMoveToPose()</slot>
   <slot>onClickStartVisual()</slot>
   <slot>onClickStopVisual()</slot>
   <slot>onClickShutdown()</slot>
-  <slot>onClickQuit()</slot>
+  <slot>onClickPathImp()</slot>
+  <slot>onClickMoveToPose()</slot>
+  <slot>OnClickShowTCPForce()</slot>
+  <slot>onClickPlaceEndPoint()</slot>
   <slot>onSelectionChangedVFx(QString)</slot>
   <slot>onSelectionChangedVFy(QString)</slot>
   <slot>onSelectionChangedVFz(QString)</slot>
@@ -1083,8 +915,6 @@
   <slot>onSelectionChangedPIx(QString)</slot>
   <slot>onSelectionChangedPIy(QString)</slot>
   <slot>onSelectionChangedPIz(QString)</slot>
-  <slot>onValueChangedPointsRegister(int)</slot>
-  <slot>onIndexChangedSendDataType(int)</slot>
   <slot>onIndexChangedVFtype(int)</slot>
   <slot>onIndexChangedVFCOFrame(int)</slot>
   <slot>onIndexChangedPICOFrame(int)</slot>

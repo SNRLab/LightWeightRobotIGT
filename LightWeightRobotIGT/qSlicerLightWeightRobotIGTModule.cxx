@@ -64,13 +64,13 @@ qSlicerLightWeightRobotIGTModule::~qSlicerLightWeightRobotIGTModule()
 //-----------------------------------------------------------------------------
 QString qSlicerLightWeightRobotIGTModule::helpText()const
 {
-  return "This is a loadable module bundled in an extension";
+  return "The LightWeightRobotIGT module allows for communication with and light weight robot iiwa (KUKA Laboratories GmbH) via an OpenIGTLink based interfaces for state control and visualization. ";
 }
 
 //-----------------------------------------------------------------------------
 QString qSlicerLightWeightRobotIGTModule::acknowledgementText()const
 {
-  return "This work was was partially funded by NIH grant 3P41RR013218-12S1";
+  return "This work was was partially funded by NIH grant 3P41RR013218-12S1 and by KUKA Laboratories GmbH (Augsburg, Germany)";
 }
 
 //-----------------------------------------------------------------------------
@@ -78,6 +78,7 @@ QStringList qSlicerLightWeightRobotIGTModule::contributors()const
 {
   QStringList moduleContributors;
   moduleContributors << QString("Junichi Tokuda");
+  moduleContributors << QString("Sebastian Tauscher");
   return moduleContributors;
 }
 
