@@ -16,6 +16,7 @@
 ==============================================================================*/
 
 // LightWeightRobotIGT Logic includes
+#include "vtkMRMLScene.h"
 #include "vtkSlicerLightWeightRobotIGTLogic.h"
 #include "vtkMRMLIGTLSessionManagerNode.h"
 #include <vtkMRMLLinearTransformNode.h>
@@ -24,6 +25,8 @@
 
 // VTK includes
 #include <vtkNew.h>
+// VTK includes
+#include <vtkObjectFactory.h>
 
 // STD includes
 #include <cassert>

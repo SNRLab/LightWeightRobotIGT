@@ -40,7 +40,7 @@
 
 //---------------------------------------------------------------------------
 vtkStandardNewMacro(vtkIGTLToMRMLPoint);
-vtkCxxRevisionMacro(vtkIGTLToMRMLPoint, "$Revision: 15552 $");
+//vtkCxxRevisionMacro(vtkIGTLToMRMLPoint, "$Revision: 15552 $");
 
 //---------------------------------------------------------------------------
 vtkIGTLToMRMLPoint::vtkIGTLToMRMLPoint()

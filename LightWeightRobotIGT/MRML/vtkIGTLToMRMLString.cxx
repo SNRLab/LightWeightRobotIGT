@@ -13,7 +13,7 @@
 #include "vtkIGTLToMRMLString.h"
 
 vtkStandardNewMacro(vtkIGTLToMRMLString);
-vtkCxxRevisionMacro(vtkIGTLToMRMLString, "$Revision: 1.0 $");
+//vtkCxxRevisionMacro(vtkIGTLToMRMLString, "$Revision: 1.0 $");
 
 
 
