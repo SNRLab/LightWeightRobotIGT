@@ -420,7 +420,7 @@
   <customwidget>
    <class>qMRMLNodeComboBox</class>
    <extends>QWidget</extends>
-   <header>qmrmlnodecombobox.h</header>
+   <header>qMRMLNodeComboBox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
