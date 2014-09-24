@@ -2,6 +2,8 @@
 
 Portions (c) Copyright 2005 Brigham and Women's Hospital (BWH) All Rights Reserved.
 
+Portions (c) Copyright 2014 Sebastian Tauscher, Institute of Mechatronic Systems, Leibniz Universitaet Hannover All Rights Reserved.
+
 See COPYRIGHT.txt
 or http://www.slicer.org/copyright/copyright.txt for details.
 
@@ -23,7 +25,7 @@ Program:   3D Slicer
 #include <vtkCollection.h>
 #include <vtkCollectionIterator.h>
 
-#include <vtkCallbackCommand.h> //TF
+#include <vtkCallbackCommand.h>
 #include <vtkIntArray.h>
 #include <vtkMatrixToLinearTransform.h>
 #include <vtkMatrix4x4.h>
@@ -360,6 +362,7 @@ void vtkMRMLIGTLSessionManagerNode::SendCommand(std::string CommandString)
   this->UID++;
   ss << this->UID;
   std::string TmpCmd = "CMD_" + ss.str();
+  std::cout << "Commmand :  "<<CommandString<<std::endl;
   tnode->SetName(TmpCmd.c_str());
   tnode->SetTextLabel(CommandString.data());
   if(UID>999999999999){
@@ -388,9 +391,7 @@ void vtkMRMLIGTLSessionManagerNode::ObserveAcknowledgeString()
   }
   CallBack->SetClientData(this);
   CallBack->SetCallback(NodeChanged);
-  tnode->AddObserver( vtkMRMLAnnotationTextNode::ValueModifiedEvent, CallBack);
-
-  
+  tnode->AddObserver( vtkMRMLAnnotationTextNode::ValueModifiedEvent, CallBack);  
 }
 
 void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data)
@@ -407,6 +408,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 		return;
 	}
 	std::string TmpACK = anode->GetTextLabel();
+	std::cout << "Acknowledge :  "<<TmpACK <<std::endl;
 	thisClass->SetGlobalWarningDisplay(1);
 	int firstpos = TmpACK.find_first_of(";",0);
 	std::string AckStateString = TmpACK.substr(0 , firstpos);
@@ -433,7 +435,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					   }
 
 					}else{
-						std::string name = "LBRPart";
+						std::string name = "Link";
 						std::stringstream name_ss;
 						name_ss <<name << i<<"Display";
 						name = name_ss.str();
@@ -469,7 +471,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					}
 
 				}else{
-					std::string name = "LBRPart";
+					std::string name = "Link";
 					std::stringstream name_ss;
 					name_ss <<name << i<<"Display";
 					name = name_ss.str();
@@ -479,8 +481,6 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					if(modelDisplay){
 						modelDisplay->SetColor(0.18,0.39,0.514) ; // set color (0.95,0.83,0.57 = bone
 					}
-
-					// model attributes
 				}
 			}
 		}else if(strcmp(AckStateString.c_str(), "GravComp") == 0){
@@ -495,7 +495,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					}
 
 				}else{
-					std::string name = "LBRPart";
+					std::string name = "Link";
 					std::stringstream name_ss;
 					name_ss <<name << i<<"Display";
 					name = name_ss.str();
@@ -520,7 +520,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 				  
 
 				}else{
-					std::string name = "LBRPart";
+					std::string name = "Link";
 					std::stringstream name_ss;
 					name_ss <<name << i<<"Display";
 					name = name_ss.str();
@@ -591,7 +591,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 				   }
 
 				}else{
-					std::string name = "LBRPart";
+					std::string name = "Link";
 					std::stringstream name_ss;
 					name_ss <<name << i<<"Display";
 					name = name_ss.str();
@@ -672,20 +672,4 @@ void vtkMRMLIGTLSessionManagerNode::VirtFixOff()
 	if(cone){
 		cone->VisibilityOff();
 	}
-	/*if (vtkCollection::SafeDownCast(this->GetScene()->GetNodesByName("VF")))
-	{
-		vtkSmartPointer<vtkCollection> models=vtkSmartPointer<vtkCollection>::New();
-		vtkMRMLModelDisplayNode* VF;
-		models = vtkCollection::SafeDownCast(this->GetScene()->GetNodesByName("VF"));
-		
-		vtkSmartPointer<vtkCollectionIterator> iterator=vtkSmartPointer<vtkCollectionIterator>::New();	
-		iterator->SetCollection (models);
-		iterator->GoToFirstItem ();
-		for (int i=0; i <models->GetNumberOfItems ();i++)
-		{
-			VF=vtkMRMLModelDisplayNode::SafeDownCast(iterator->GetCurrentObject ());
-			VF-> VisibilityOff();
-			iterator->GoToNextItem ();
-		}
-	}*/
 }

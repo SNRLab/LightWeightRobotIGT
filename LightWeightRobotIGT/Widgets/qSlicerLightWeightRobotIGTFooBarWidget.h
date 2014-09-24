@@ -18,6 +18,13 @@
 
 ==============================================================================*/
 
+/*==============================================================================
+
+  Program: LightWeightRobotIGT
+
+  Portions (c) Copyright 2014 Sebastian Tauscher, Institute of Mechatronic Systems, Leibniz Universitaet Hannover All Rights Reserved.
+==============================================================================*/
+
 #ifndef __qSlicerLightWeightRobotIGTFooBarWidget_h
 #define __qSlicerLightWeightRobotIGTFooBarWidget_h
 
@@ -27,6 +34,7 @@
 // FooBar Widgets includes
 #include "qSlicerLightWeightRobotIGTModuleWidgetsExport.h"
 #include "qSlicerWidget.h"
+
 
 class qSlicerLightWeightRobotIGTFooBarWidgetPrivate;
 class vtkMRMLNode;
@@ -85,7 +93,6 @@ public:
   typedef qSlicerWidget Superclass;
   qSlicerLightWeightRobotIGTFooBarWidget(QWidget *parent=0);
   virtual ~qSlicerLightWeightRobotIGTFooBarWidget();
-  
   VisualizationOptions VisualOptions;
   VirtualFixturesOptions VFOptions;
   PathImpOptions PIOptions;
@@ -121,7 +128,6 @@ public slots:
   virtual void onSelectionChangedMPB(QString);
   virtual void onSelectionChangedMPC(QString);
   virtual void onIndexChangedVFtype(int);
-  virtual void onIndexChangedVisualCOFrame(int);
 
 protected slots:
 

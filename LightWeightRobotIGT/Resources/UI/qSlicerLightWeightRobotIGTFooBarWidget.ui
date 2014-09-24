@@ -62,32 +62,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_19">
-     <property name="text">
-      <string>Img/Rob</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QComboBox" name="comboBox_IMGBaseVisual">
-     <item>
-      <property name="text">
-       <string>IMG</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>ROB</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Joint</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item>
     <widget class="QLineEdit" name="LineEditRobotPath">
      <property name="enabled">
       <bool>true</bool>
@@ -772,22 +746,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>comboBox_IMGBaseVisual</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onIndexChangedVisualCOFrame(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>410</x>
-     <y>280</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>comboBox_VFtype</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
@@ -916,9 +874,5 @@
   <slot>onSelectionChangedPIy(QString)</slot>
   <slot>onSelectionChangedPIz(QString)</slot>
   <slot>onIndexChangedVFtype(int)</slot>
-  <slot>onIndexChangedVFCOFrame(int)</slot>
-  <slot>onIndexChangedPICOFrame(int)</slot>
-  <slot>onIndexChangedMPCOFrame(int)</slot>
-  <slot>onIndexChangedVisualCOFrame(int)</slot>
  </slots>
 </ui>
