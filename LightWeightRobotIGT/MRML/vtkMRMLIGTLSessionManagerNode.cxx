@@ -193,6 +193,7 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   ss << UID;
   std::string TmpCmd = "CMD_" + ss.str();
   command->SetName(TmpCmd.c_str());
+  command->SetTextLabel("IDLE;");
   scene->AddNode(command);
   cnode->RegisterOutgoingMRMLNode(command);
   this->AddAndObserveMessageNodeID(cnode->GetID());
