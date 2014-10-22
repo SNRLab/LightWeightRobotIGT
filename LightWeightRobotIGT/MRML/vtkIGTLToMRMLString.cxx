@@ -55,12 +55,8 @@ vtkMRMLNode* vtkIGTLToMRMLString
 vtkIntArray* vtkIGTLToMRMLString
 ::GetNodeEvents()
 {
-  vtkIntArray* events;
 
-  events = vtkIntArray::New();
-  events->InsertNextValue( vtkCommand::ModifiedEvent );
-
-  return events;
+  return NULL;
 }
 
 

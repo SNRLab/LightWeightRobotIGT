@@ -67,18 +67,8 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
 //----------------------------------------------------------------------------
 vtkMRMLIGTLSessionManagerNode::~vtkMRMLIGTLSessionManagerNode()
 {
-	 vtkMRMLScene * scene = this->GetScene();
-  if (!scene)
-    {
-    return;
-    }
-	 vtkMRMLIGTLConnectorNode* cnode = vtkMRMLIGTLConnectorNode::SafeDownCast(scene->GetNodeByID(this->GetConnectorNodeIDInternal()));
-	 if (!cnode) // There is no connector node with the specified MRML ID
-	{
-		return;
-    }
+
 	if(this->StringMessageConverter){
-		 cnode->UnregisterMessageConverter(this->StringMessageConverter);
 		 this->StringMessageConverter->Delete();
 	}
 }
@@ -212,7 +202,6 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   cnode->RegisterOutgoingMRMLNode(command);
   this->AddAndObserveMessageNodeID(cnode->GetID());
   this->SetCommandStringNodeIDInternal(command->GetID());
-  //command->Delete();
 
   vtkSmartPointer< vtkMRMLLinearTransformNode > rtrans = vtkSmartPointer< vtkMRMLLinearTransformNode >::New();
   rtrans->SetName("T_CT_Base");
@@ -220,7 +209,6 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   cnode->RegisterOutgoingMRMLNode(rtrans);
   this->AddAndObserveMessageNodeID(cnode->GetID());
   this->SetRegistrationTransformNodeIDInternal(rtrans->GetID());
-  //rtrans->Delete();*/
 }
 
 
@@ -712,8 +700,4 @@ void vtkMRMLIGTLSessionManagerNode::VirtFixOff()
 	if(cone){
 		cone->VisibilityOff();
 	}
-	//Path->Delete();
-	//plane->Delete();
-	//planeBorder->Delete();
-	//cone->Delete();
 }
