@@ -67,6 +67,20 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
 //----------------------------------------------------------------------------
 vtkMRMLIGTLSessionManagerNode::~vtkMRMLIGTLSessionManagerNode()
 {
+	 vtkMRMLScene * scene = this->GetScene();
+  if (!scene)
+    {
+    return;
+    }
+	 vtkMRMLIGTLConnectorNode* cnode = vtkMRMLIGTLConnectorNode::SafeDownCast(scene->GetNodeByID(this->GetConnectorNodeIDInternal()));
+	 if (!cnode) // There is no connector node with the specified MRML ID
+	{
+		return;
+    }
+	if(this->StringMessageConverter){
+		 cnode->UnregisterMessageConverter(this->StringMessageConverter);
+		 this->StringMessageConverter->Delete();
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -198,7 +212,7 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   cnode->RegisterOutgoingMRMLNode(command);
   this->AddAndObserveMessageNodeID(cnode->GetID());
   this->SetCommandStringNodeIDInternal(command->GetID());
-  command->Delete();
+  //command->Delete();
 
   vtkSmartPointer< vtkMRMLLinearTransformNode > rtrans = vtkSmartPointer< vtkMRMLLinearTransformNode >::New();
   rtrans->SetName("T_CT_Base");
@@ -206,7 +220,7 @@ void vtkMRMLIGTLSessionManagerNode::SetAndObserveConnectorNodeID(const char *con
   cnode->RegisterOutgoingMRMLNode(rtrans);
   this->AddAndObserveMessageNodeID(cnode->GetID());
   this->SetRegistrationTransformNodeIDInternal(rtrans->GetID());
-  rtrans->Delete();
+  //rtrans->Delete();*/
 }
 
 
@@ -239,7 +253,7 @@ void vtkMRMLIGTLSessionManagerNode::ProcessMRMLEvents ( vtkObject *caller,
   // do some checks here to prevent retrieving the node for nothing.
 	if (caller != NULL)
     {
-	  if(strcmp(caller->GetClassName(),"vtkMRMLAnnotationTextNode")){
+	 /* if(strcmp(caller->GetClassName(),"vtkMRMLAnnotationTextNode")){
 
 			 vtkMRMLScene* scene = this->GetScene();
 		  if (!scene) 
@@ -264,7 +278,7 @@ void vtkMRMLIGTLSessionManagerNode::ProcessMRMLEvents ( vtkObject *caller,
       (event != vtkCommand::ModifiedEvent && 
       event != vtkMRMLIGTLSessionManagerNode::TransformModifiedEvent))
     {
-    return;
+    return;*/
     }
 }
 
@@ -354,7 +368,11 @@ void vtkMRMLIGTLSessionManagerNode::SendCommand(std::string CommandString)
   vtkMRMLNode* node = scene->GetNodeByID(this->GetCommandStringNodeIDInternal());
   
   vtkMRMLAnnotationTextNode* tnode = vtkMRMLAnnotationTextNode::SafeDownCast(node);
+  vtkMRMLIGTLConnectorNode* cnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(scene->GetNodeByID(this->GetConnectorNodeIDInternal()));
 
+  if(cnode->GetState()!= 2){
+	 return;
+ }
   if (!tnode)
     {
     return;
@@ -371,17 +389,22 @@ void vtkMRMLIGTLSessionManagerNode::SendCommand(std::string CommandString)
   }
 }
 
-vtkSmartPointer<vtkCallbackCommand> CallBack = vtkSmartPointer<vtkCallbackCommand>::New();
+
 void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);
 
 void vtkMRMLIGTLSessionManagerNode::ObserveAcknowledgeString()
 {
+ vtkSmartPointer<vtkCallbackCommand> CallBack = vtkSmartPointer<vtkCallbackCommand>::New();
   vtkMRMLScene* scene = this->GetScene();
   if (!scene) 
     {
     return;
     }
-
+  vtkMRMLIGTLConnectorNode* cnode = vtkMRMLIGTLConnectorNode::SafeDownCast(scene->GetNodeByID(this->ConnectorNodeIDInternal));
+  if (!cnode) // There is no connector node with the specified MRML ID
+    {
+    return;
+    }
   vtkMRMLNode* node = scene->GetFirstNodeByName("ACK");;
   
   vtkMRMLAnnotationTextNode* tnode = vtkMRMLAnnotationTextNode::SafeDownCast(node);
@@ -390,9 +413,11 @@ void vtkMRMLIGTLSessionManagerNode::ObserveAcknowledgeString()
   {
     return;
   }
+
   CallBack->SetClientData(this);
   CallBack->SetCallback(NodeChanged);
-  tnode->AddObserver( vtkMRMLAnnotationTextNode::ValueModifiedEvent, CallBack);  
+  tnode->AddObserver( vtkMRMLAnnotationTextNode::ValueModifiedEvent, CallBack); 
+  //CallBack->Delete();
 }
 
 void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data)
@@ -434,6 +459,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					   if(modelDisplay){
 						modelDisplay->SetColor(0.95,0.95,0.95); // set color (0.95,0.83,0.57 = bone
 					   }
+					   //modelDisplay->Delete();
 
 					}else{
 						std::string name = "Link";
@@ -446,6 +472,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 						if(modelDisplay){
 							modelDisplay->SetColor(0.95,0.95,0.95);
 					   }
+						//modelDisplay->Delete();
 					}
 			  }
 		  }
@@ -458,7 +485,8 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 			}
 		  std::string TmpCmd = "IDLE;";
 		  tnode->SetTextLabel(TmpCmd.data());
-
+		  //ToolDisplay->Delete();
+		  
 	}else{
 		if(strcmp(AckStateString.c_str(), "IDLE")== 0){
 			thisClass->VirtFixOff();
@@ -470,6 +498,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 				   if(modelDisplay){
 						modelDisplay->SetColor(0.18,0.39,0.514) ; // set color (0.95,0.83,0.57 = bone
 					}
+				   //modelDisplay->Delete();
 
 				}else{
 					std::string name = "Link";
@@ -482,6 +511,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					if(modelDisplay){
 						modelDisplay->SetColor(0.18,0.39,0.514) ; // set color (0.95,0.83,0.57 = bone
 					}
+					//modelDisplay->Delete();
 				}
 			}
 		}else if(strcmp(AckStateString.c_str(), "GravComp") == 0){
@@ -494,6 +524,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 				   if(modelDisplay){
 						modelDisplay->SetColor(0.501,0.688,0.501);// set color (0.95,0.83,0.57 = bone
 					}
+				   //modelDisplay->Delete();
 
 				}else{
 					std::string name = "Link";
@@ -506,6 +537,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					 if(modelDisplay){
 						modelDisplay->SetColor(0.501,0.688,0.501);// set color (0.95,0.83,0.57 = bone
 					}
+					 //modelDisplay->Delete();
 				}
 			}
 		}else if( strcmp(AckStateString.c_str(), "VirtualFixtures")== 0 || strcmp(AckStateString.c_str(), "PathImp")== 0){
@@ -518,6 +550,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 				   if(modelDisplay){
 						modelDisplay->SetColor(0.11,0.433,0.333); // set color (0.95,0.83,0.57 = bone
 					}
+				   //modelDisplay->Delete();
 				  
 
 				}else{
@@ -531,6 +564,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					if(modelDisplay){
 						modelDisplay->SetColor(0.11,0.433,0.333); // set color (0.95,0.83,0.57 = bone
 					}
+					//modelDisplay->Delete();
 				  
 				}
 			}
@@ -561,6 +595,8 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 							  VirtualFixture->SetOpacity(8.0) ;
 						  }
 					  }
+					 //VirtualFixture->Delete();
+
 					}
 			  
 		  }else if(strcmp(AckStateString.c_str(), "PathImp") == 0){
@@ -577,6 +613,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 			  }else if(Path){
 				  Path->SetColor(1,0,0);
 			  }
+			  //Path->Delete();
 		  }
 	  
 	  }else if(strcmp(AckStateString.c_str(), "MoveToPose")== 0){
@@ -590,6 +627,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 				   if(modelDisplay){
 						modelDisplay->SetColor(0.688,0.201,0.0); // set color (0.95,0.83,0.57 = bone
 				   }
+				    //modelDisplay->Delete();
 
 				}else{
 					std::string name = "Link";
@@ -602,6 +640,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 					if(modelDisplay){
 						modelDisplay->SetColor(0.688,0.201,0.0); // set color (0.95,0.83,0.57 = bone
 				   }
+					//modelDisplay->Delete();
 				}
 			}
 	  }
@@ -645,7 +684,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 		VirtualFixture->VisibilityOn();
 	}
 
-
+	 //VirtualFixture->Delete();
 }
 void vtkMRMLIGTLSessionManagerNode::VirtFixOff()
 {
@@ -673,4 +712,8 @@ void vtkMRMLIGTLSessionManagerNode::VirtFixOff()
 	if(cone){
 		cone->VisibilityOff();
 	}
+	//Path->Delete();
+	//plane->Delete();
+	//planeBorder->Delete();
+	//cone->Delete();
 }

@@ -99,7 +99,6 @@ public:
   MoveToPoseOptions MPOptions;
 
 
-
 public slots:
   virtual void setMRMLScene(vtkMRMLScene *newScene);
   virtual void setSessionManagerNode(vtkMRMLNode *node);

@@ -197,7 +197,7 @@ setMRMLScene(vtkMRMLScene *newScene)
 
   d->SessionManagerNodeSelector->setMRMLScene(newScene);
   
-  vtkSmartPointer< vtkMRMLIGTLSessionManagerNode> snode = vtkSmartPointer< vtkMRMLIGTLSessionManagerNode>::New() ;
+ vtkSmartPointer< vtkMRMLIGTLSessionManagerNode> snode = vtkSmartPointer< vtkMRMLIGTLSessionManagerNode>::New() ;
   if (!snode)
     {
     return;
@@ -217,16 +217,17 @@ setMRMLScene(vtkMRMLScene *newScene)
 	cnode->SetName("StateControlConnectorNode");
 	cnode->SetScene(this->mrmlScene());
     this->mrmlScene()->AddNode(cnode);
-	cnode->Start();
     snode->SetAndObserveConnectorNodeID(cnode->GetID());
+	//cnode->Delete();
     }
    vtkSmartPointer< vtkMRMLIGTLConnectorNode >  Visualcnode = vtkSmartPointer< vtkMRMLIGTLConnectorNode >::New();
    Visualcnode->SetTypeClient("192.168.42.2", 49002);
    Visualcnode->SetName("VisualizationConnectorNode");
    Visualcnode->SetScene(this->mrmlScene());
    this->mrmlScene()->AddNode(Visualcnode);
-   Visualcnode->Start();
-
+   //Visualcnode->Delete();
+   //snode->Delete();
+	
   
 }
 
@@ -235,6 +236,7 @@ setMRMLScene(vtkMRMLScene *newScene)
 void qSlicerLightWeightRobotIGTFooBarWidget::
 setSessionManagerNode(vtkMRMLNode *node)
 {
+  
  
 }
 
@@ -307,6 +309,10 @@ onClickVirtualFixtures()
 		model->SetPolyDataConnection(cone->GetOutputPort());
   		model->SetName("cone");
 		this->mrmlScene()->AddNode(model);
+		transformNode->Delete();
+		model->Delete();
+		modelDisplay->Delete();
+		cone->Delete();
 
 
   }
@@ -371,6 +377,13 @@ onClickVirtualFixtures()
   		model->SetPolyDataConnection(plane->GetOutputPort());
   		model->SetName("plane");
 		this->mrmlScene()->AddNode(model);
+		transformNode->Delete();
+		model->Delete();
+		modelDisplay->Delete();
+		modelb->Delete();
+		modelDisplayb->Delete();
+		plane->Delete();
+		planeb->Delete();
   }
 
   //---
@@ -385,7 +398,7 @@ onClickVirtualFixtures()
     {
     snode->SendCommand(CommandString);
     }
-
+	
 }
 
 //-----------------------------------------------------------------------------
@@ -484,7 +497,6 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickPathImp(){
 			transformNode= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
 
 		vtkSmartPointer<vtkCylinderSource> path =vtkSmartPointer<vtkCylinderSource>::New();
-		vtkSmartPointer<vtkPolyData> polydata=vtkSmartPointer<vtkPolyData>::New();	
 		vtkSmartPointer<vtkMRMLModelNode> model=vtkSmartPointer<vtkMRMLModelNode>::New();
 		vtkSmartPointer<vtkMRMLModelDisplayNode> modelDisplay=vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
 		vtkSmartPointer< vtkMRMLLinearTransformNode > trans = vtkSmartPointer< vtkMRMLLinearTransformNode >::New();
@@ -543,7 +555,6 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickPathImp(){
 		path->SetCenter(0, 0 - height/2, 0);
 		path->SetResolution(50); // Auflösung des Kegels
 	
-		polydata=path->GetOutput();
 		model->SetScene(this->mrmlScene());
 	    
 		//-----------set model attributes and add them to the scene-----
@@ -559,8 +570,15 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickPathImp(){
 		model->SetPolyDataConnection(path->GetOutputPort());
 		model->SetName("path");
 		this->mrmlScene()->AddNode(model);
-		 CommandString = "PathImp;"+VisualOptions.COFType+";" +PIOptions.X+";"+ PIOptions.Y +";" + PIOptions.Z+";";
-  
+		CommandString = "PathImp;"+VisualOptions.COFType+";" +PIOptions.X+";"+ PIOptions.Y +";" + PIOptions.Z+";";
+		//model->Delete();
+		//trans->Delete();
+		//path->Delete();
+		//transform->Delete();
+		//tnode->Delete();
+		//transformMatrix->Delete();
+		//modelDisplay->Delete();
+		//transformNode->Delete();
    if (!d->SessionManagerNodeSelector)
     {
     return;
@@ -764,6 +782,10 @@ void qSlicerLightWeightRobotIGTFooBarWidget::CreateFiducial()
 	   fiducial->Initialize(this->mrmlScene());
        d->annotationLogic->GetActiveHierarchyNode()->SetAssociatedNodeID(fiducial->GetID());
     }
+	 //tnode->Delete();
+	 //fiducial->Delete();
+	 //transformMatrix->Delete();
+
 
 }
 
@@ -817,7 +839,9 @@ void qSlicerLightWeightRobotIGTFooBarWidget::OnClickLoadRobot (){
 	T_1EE->SetAndObserveTransformNodeID( T_CTBase->GetID());
 	model->SetAndObserveTransformNodeID( T_1EE->GetID() );
 	this->mrmlScene()->AddNode(model.GetPointer());
-
+	reader->Delete();
+	model->Delete();
+	display->Delete();
 
    for(int i = 0 ; i<8 ; i++)
     {
@@ -852,8 +876,10 @@ void qSlicerLightWeightRobotIGTFooBarWidget::OnClickLoadRobot (){
 			T_Base = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
 			model->SetAndObserveTransformNodeID( T_Base->GetID());
 			this->mrmlScene()->AddNode(model.GetPointer());
-		   
-
+		   T_Base->Delete();
+			reader->Delete();
+			model->Delete();
+			display->Delete();
 
 		}else{
 			name = "Link";
@@ -930,12 +956,30 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickStartCyclic(){
   vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
   if (snode)
     {
+		vtkMRMLIGTLConnectorNode* cnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(this->mrmlScene()->GetNodeByID(snode->ConnectorNodeIDInternal));
+		if(!cnode){
+			return;
+		}
+		cnode->Start();
+		vtkMRMLIGTLConnectorNode* Visualcnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("VisualizationConnectorNode"));
+		if(!Visualcnode){
+			return;
+		}
+		Visualcnode->Start();
+		Sleep(500);
+		snode->SendCommand("IDLE;;");
+		Sleep(50);
+		snode->SendCommand("IDLE;;");
+		Sleep(100);
+		cnode->ImportDataFromCircularBuffer();
+		int i = cnode->GetNumberOfIncomingMRMLNodes();
+		Sleep(50);
 		snode->ObserveAcknowledgeString();
+
 
     }
 
 }
-
 
 
 //---------------------------------------------------------------
@@ -990,5 +1034,6 @@ void qSlicerLightWeightRobotIGTFooBarWidget::OnClickShowTCPForce(){
    reader->Delete();
    model->Delete();
    modelDisplay->Delete();
+   TCPForce->Delete();
    //polydata->Delete();
 }
