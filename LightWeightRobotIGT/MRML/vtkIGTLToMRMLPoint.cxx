@@ -76,12 +76,7 @@ vtkMRMLNode* vtkIGTLToMRMLPoint::CreateNewNode(vtkMRMLScene* scene, const char* 
 //---------------------------------------------------------------------------
 vtkIntArray* vtkIGTLToMRMLPoint::GetNodeEvents()
 {
-  vtkIntArray* events;
-
-  events = vtkIntArray::New();
-  events->InsertNextValue(vtkMRMLNode::HierarchyModifiedEvent);
-
-  return events;
+  return NULL;
 }
 
 //---------------------------------------------------------------------------

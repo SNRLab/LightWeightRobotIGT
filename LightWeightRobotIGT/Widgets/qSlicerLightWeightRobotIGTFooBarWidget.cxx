@@ -274,18 +274,18 @@ onClickVirtualFixtures()
   
   
   if(VFOptions.VFType == "cone"){
-	  if(this->mrmlScene()->GetFirstNodeByName("cone")){
-		  this->mrmlScene()->RemoveNode(this->mrmlScene()->GetFirstNodeByName("cone"));
-	  }
+	  vtkSmartPointer<vtkMRMLModelNode> model=vtkSmartPointer<vtkMRMLModelNode>::New();
+	  vtkSmartPointer<vtkMRMLModelDisplayNode> modelDisplay=vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
+	  
 	  CommandString = CommandString + VFOptions.phi;
 		vtkSmartPointer<vtkMRMLLinearTransformNode> transformNode=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
 	
-		if(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"))
+		if(this->mrmlScene()->GetFirstNodeByName("T_CT_Base")){
 			transformNode= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
+		}
 	
 		vtkSmartPointer<vtkConeSource> cone=vtkSmartPointer<vtkConeSource>::New();	
-		vtkSmartPointer<vtkMRMLModelNode> model=vtkSmartPointer<vtkMRMLModelNode>::New();
-		vtkSmartPointer<vtkMRMLModelDisplayNode> modelDisplay=vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
+		
 		
 		double height = 200; 
 		double radius = height*tan(atof(VFOptions.phi.c_str())*PI/360); 
@@ -298,35 +298,41 @@ onClickVirtualFixtures()
 		cone->SetHeight(height);
 		cone->SetResolution(50); 
 		cone->SetCenter(cx,cy,cz); 
-	    model->SetScene(this->mrmlScene());
+		if(this->mrmlScene()->GetFirstNodeByName("cone")){
+			model = vtkMRMLModelNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("cone"));
+			modelDisplay = vtkMRMLModelDisplayNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("coneDisplay"));
+			model->Reset();
+			modelDisplay->Reset();
+		}
+
+		model->SetScene(this->mrmlScene());
 	    
-	    //-----------set model attributes and add them to the scene-----
-	    modelDisplay->SetColor(0,0,1) ;
+		//-----------set model attributes and add them to the scene-----
+		modelDisplay->SetColor(0,0,1) ;
 		modelDisplay->SetOpacity(0.3) ;
-	    modelDisplay->SetName("coneDisplay");
+		modelDisplay->SetName("coneDisplay");
 		modelDisplay->SetScene(this->mrmlScene());
-		this->mrmlScene()->AddNode(modelDisplay);
-		
+		if(!this->mrmlScene()->GetFirstNodeByName("coneDisplay")){
+			this->mrmlScene()->AddNode(modelDisplay);
+		}
+
 		model->SetAndObserveDisplayNodeID(modelDisplay->GetID());
 		model->SetAndObserveTransformNodeID( transformNode->GetID() );
 		model->SetPolyDataConnection(cone->GetOutputPort());
-  		model->SetName("cone");
-		this->mrmlScene()->AddNode(model);
-		transformNode->Delete();
-		model->Delete();
-		modelDisplay->Delete();
-		cone->Delete();
+		model->SetName("cone");
+		if(!this->mrmlScene()->GetFirstNodeByName("cone")){
+			this->mrmlScene()->AddNode(model);
+		}
+
+		//transformNode->Delete();
+		//model->Delete();
+		//modelDisplay->Delete();
+		//cone->Delete();
 
 
   }
   if(VFOptions.VFType == "plane")
   {
-	   if(this->mrmlScene()->GetFirstNodeByName("plane")){
-		  this->mrmlScene()->RemoveNode(this->mrmlScene()->GetFirstNodeByName("plane"));
-	  }
-	   if(this->mrmlScene()->GetFirstNodeByName("planeEdge")){
-		  this->mrmlScene()->RemoveNode(this->mrmlScene()->GetFirstNodeByName("planeEdge"));
-	  }
 		vtkSmartPointer<vtkRegularPolygonSource> plane=vtkSmartPointer<vtkRegularPolygonSource>::New();
 	
 		vtkSmartPointer<vtkRegularPolygonSource> planeb=vtkSmartPointer<vtkRegularPolygonSource>::New();	
@@ -346,6 +352,12 @@ onClickVirtualFixtures()
 		planeb->SetNumberOfSides(4);
 		planeb->SetRadius(size); //
 
+		if(this->mrmlScene()->GetFirstNodeByName("planeEdge")){
+			modelb = vtkMRMLModelNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("planeEdge"));
+			modelDisplayb = vtkMRMLModelDisplayNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("planeEdgeDisplay"));
+			modelb->Reset();
+			modelDisplayb->Reset();
+		}
 	    modelb->SetScene(this->mrmlScene());
 		modelb->SetAndObserveTransformNodeID( transformNode->GetID() );
 	    
@@ -354,18 +366,27 @@ onClickVirtualFixtures()
 		modelDisplayb->SetOpacity(0.4) ;
 	    modelDisplayb->SetName("planeEdgeDisplay");
 		modelDisplayb->SetScene(this->mrmlScene());
-		this->mrmlScene()->AddNode(modelDisplayb);
+		if(!this->mrmlScene()->GetFirstNodeByName("planeEdgeDisplay")){
+			this->mrmlScene()->AddNode(modelDisplayb);
+		}
 		
 		modelb->SetAndObserveDisplayNodeID(modelDisplayb->GetID());
 		modelb->SetPolyDataConnection(planeb->GetOutputPort());
   		modelb->SetName("planeEdge");
-		this->mrmlScene()->AddNode(modelb);
+		if(!this->mrmlScene()->GetFirstNodeByName("planeEdge")){
+			this->mrmlScene()->AddNode(modelb);
+		}
 
 		plane->SetNormal(-1*atof(VFOptions.nX.c_str()),-1*atof(VFOptions.nY.c_str()),-1*atof(VFOptions.nZ.c_str()));
 		plane->SetCenter(atof(PIOptions.X.c_str()),atof(PIOptions.Y.c_str()),atof(PIOptions.Z.c_str()));
 		plane->SetNumberOfSides(4);
 		plane->SetRadius(size);
-
+		if(this->mrmlScene()->GetFirstNodeByName("plane")){
+			model = vtkMRMLModelNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("plane"));
+			modelDisplay = vtkMRMLModelDisplayNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("planeDisplay"));
+			model->Reset();
+			modelDisplay->Reset();
+		}
 	    model->SetScene(this->mrmlScene());
 	    
 	    //-----------set model attributes and add them to the scene-----
@@ -373,20 +394,24 @@ onClickVirtualFixtures()
 		modelDisplay->SetOpacity(0.4) ;
 	    modelDisplay->SetName("planeDisplay");
 		modelDisplay->SetScene(this->mrmlScene());
-		this->mrmlScene()->AddNode(modelDisplay);
+		if(!this->mrmlScene()->GetFirstNodeByName("planeDisplay")){
+			this->mrmlScene()->AddNode(modelDisplay);
+		}
 		
 		model->SetAndObserveDisplayNodeID(modelDisplay->GetID());
 		model->SetAndObserveTransformNodeID( transformNode->GetID() );
   		model->SetPolyDataConnection(plane->GetOutputPort());
   		model->SetName("plane");
-		this->mrmlScene()->AddNode(model);
-		transformNode->Delete();
-		model->Delete();
-		modelDisplay->Delete();
-		modelb->Delete();
-		modelDisplayb->Delete();
-		plane->Delete();
-		planeb->Delete();
+		if(!this->mrmlScene()->GetFirstNodeByName("plane")){
+			this->mrmlScene()->AddNode(model);
+		}
+		//transformNode->Delete();
+		//model->Delete();
+		//modelDisplay->Delete();
+		//modelb->Delete();
+		//modelDisplayb->Delete();
+		//plane->Delete();
+		//planeb->Delete();
   }
 
   //---
@@ -491,9 +516,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickPathImp(){
 	 Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
   std::string CommandString;
 
-	if(this->mrmlScene()->GetFirstNodeByName("path")){
-		this->mrmlScene()->RemoveNode(this->mrmlScene()->GetFirstNodeByName("path"));
-	  }
+
 	vtkSmartPointer<vtkMRMLLinearTransformNode> transformNode=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
 		
 		if(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"))
@@ -557,7 +580,12 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickPathImp(){
 		//Connect to transform...
 		path->SetCenter(0, 0 - height/2, 0);
 		path->SetResolution(50); // Auflösung des Kegels
-	
+		if(this->mrmlScene()->GetFirstNodeByName("path")){
+			model = vtkMRMLModelNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("path"));
+			modelDisplay = vtkMRMLModelDisplayNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("pathDisplay"));
+			model->Reset();
+			modelDisplay->Reset();
+		}
 		model->SetScene(this->mrmlScene());
 	    
 		//-----------set model attributes and add them to the scene-----
@@ -565,14 +593,21 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickPathImp(){
 		modelDisplay->SetOpacity(0.5) ;
 		modelDisplay->SetName("pathDisplay");
 		modelDisplay->SetScene(this->mrmlScene());
-		this->mrmlScene()->AddNode(modelDisplay);
+		if(!this->mrmlScene()->GetFirstNodeByName("pathDisplay")){
+			this->mrmlScene()->AddNode(modelDisplay);
+		}
 		
 		model->SetAndObserveDisplayNodeID(modelDisplay->GetID());
 		trans->SetAndObserveTransformNodeID( transformNode->GetID());
 		model->SetAndObserveTransformNodeID( trans->GetID() );
 		model->SetPolyDataConnection(path->GetOutputPort());
 		model->SetName("path");
-		this->mrmlScene()->AddNode(model);
+
+		if(!this->mrmlScene()->GetFirstNodeByName("path")){
+			this->mrmlScene()->AddNode(model);
+		}
+
+
 		CommandString = "PathImp;"+VisualOptions.COFType+";" +PIOptions.X+";"+ PIOptions.Y +";" + PIOptions.Z+";";
 		//model->Delete();
 		//trans->Delete();
