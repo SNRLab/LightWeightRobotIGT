@@ -33,6 +33,9 @@
 #include <sstream>
 #include <string>
 
+// Qt Thread class (for msleep())
+#include "vtksys/SystemTools.hxx"
+
 // FooBar Widgets includes
 #include "qSlicerLightWeightRobotIGTFooBarWidget.h"
 #include "ui_qSlicerLightWeightRobotIGTFooBarWidget.h"
@@ -966,14 +969,14 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickStartCyclic(){
 			return;
 		}
 		Visualcnode->Start();
-		Sleep(500);
+                vtksys::SystemTools::Delay(500);
 		snode->SendCommand("IDLE;;");
-		Sleep(50);
+                vtksys::SystemTools::Delay(50);
 		snode->SendCommand("IDLE;;");
-		Sleep(100);
+                vtksys::SystemTools::Delay(100);
 		cnode->ImportDataFromCircularBuffer();
 		int i = cnode->GetNumberOfIncomingMRMLNodes();
-		Sleep(50);
+                vtksys::SystemTools::Delay(50);
 		snode->ObserveAcknowledgeString();
 
 
