@@ -865,17 +865,26 @@ void qSlicerLightWeightRobotIGTFooBarWidget::OnClickLoadRobot (){
 	model->SetName("Tool");
 	model->SetPolyDataConnection(reader->GetOutputPort());
 	model->SetAndObserveDisplayNodeID(display->GetID());
-	vtkSmartPointer<vtkMRMLLinearTransformNode> T_1EE=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
-   T_1EE = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_08"));
-    if (!T_1EE)
+	vtkSmartPointer<vtkMRMLLinearTransformNode> T_EE=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+   T_EE = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_EE"));
+    if (!T_EE)
 	{
 		std::cerr << "ERROR:No Transformnode T_EE found! " << std::endl;
 		return;
 	}
 	vtkSmartPointer<vtkMRMLLinearTransformNode> T_CTBase=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
 	T_CTBase = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
-	T_1EE->SetAndObserveTransformNodeID( T_CTBase->GetID());
-	model->SetAndObserveTransformNodeID( T_1EE->GetID() );
+	T_EE->SetAndObserveTransformNodeID( T_CTBase->GetID());
+
+	vtkSmartPointer<vtkMRMLLinearTransformNode> T_08=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+   T_08 = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_08"));
+    if (!T_08)
+	{
+		std::cerr << "ERROR:No Transformnode T_08 found! " << std::endl;
+		return;
+	}
+	T_08->SetAndObserveTransformNodeID( T_CTBase->GetID());
+	model->SetAndObserveTransformNodeID( T_08->GetID() );
 	this->mrmlScene()->AddNode(model.GetPointer());
 	reader->Delete();
 	model->Delete();
@@ -1048,14 +1057,17 @@ void qSlicerLightWeightRobotIGTFooBarWidget::OnClickShowTCPForce(){
    vtkSmartPointer<vtkMRMLModelDisplayNode> modelDisplay=vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
    
    //connect model to transform
-   vtkSmartPointer<vtkMRMLLinearTransformNode> TCPForce =vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
-   TCPForce = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("TCPForce"));
-    if (!TCPForce)
+   vtkSmartPointer<vtkMRMLLinearTransformNode> T_TCPForce =vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+   T_TCPForce = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("TCPForce"));
+    if (!T_TCPForce)
 	{
 		std::cerr << "ERROR:No Transformnode TCPForce found! " << std::endl;
 		return;
 	}
-	model->SetAndObserveTransformNodeID( TCPForce->GetID() );
+	vtkSmartPointer<vtkMRMLLinearTransformNode> T_CTBase=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+	T_CTBase = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
+	 T_TCPForce->SetAndObserveTransformNodeID( T_CTBase->GetID());
+	model->SetAndObserveTransformNodeID( T_TCPForce->GetID() );
 
        // model attributes
    modelDisplay->SetColor(0,0.95,0.0) ;  // set color (0.95,0.83,0.57 = bone)
@@ -1066,12 +1078,12 @@ void qSlicerLightWeightRobotIGTFooBarWidget::OnClickShowTCPForce(){
    model->SetAndObserveDisplayNodeID(modelDisplay->GetID());
    model->SetScene(this->mrmlScene());
    model->SetPolyDataConnection(reader->GetOutputPort());
-   model->SetName("TCP Force");
+   model->SetName("ForceTCP");
 
    this->mrmlScene()->AddNode(model);
    reader->Delete();
    model->Delete();
    modelDisplay->Delete();
-   TCPForce->Delete();
+   T_TCPForce->Delete();
    //polydata->Delete();
 }

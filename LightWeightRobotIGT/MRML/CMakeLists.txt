@@ -16,6 +16,7 @@ set(${KIT}_INCLUDED_DIRECTORIES
 # Source files
 set(${KIT}_SRCS
   vtkMRMLIGTLSessionManagerNode.cxx
+  vtkMRMLIGTLSessionManagerNode.h
   vtkIGTLToMRMLPoint.cxx
   vtkIGTLToMRMLString.cxx
   )
