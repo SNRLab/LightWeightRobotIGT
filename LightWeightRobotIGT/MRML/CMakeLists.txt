@@ -5,12 +5,8 @@ set(KIT ${PROJECT_NAME})
 set(${KIT}_EXPORT_DIRECTIVE "VTK_SLICER_${MODULE_NAME_UPPER}_MODULE_MRML_EXPORT")
 
 # Additional directories to include
-set(${KIT}_INCLUDED_DIRECTORIES
+set(${KIT}_INCLUDE_DIRECTORIES
   ${Slicer_Base_INCLUDE_DIRS}
-  ${vtkSlicerLightWeightRobotIGTModuleMRML_SOURCE_DIR}
-  ${vtkSlicerLightWeightRobotIGTModuleMRML_BINARY_DIR}
-  ${vtkSlicerAnnotationsModuleLogic_BINARY_DIR}
-  ${vtkSlicerAnnotationsModuleLogic_SOURCE_DIR}
   )
 
 # Source files
