@@ -97,7 +97,7 @@ public:
   VirtualFixturesOptions VFOptions;
   PathImpOptions PIOptions;
   MoveToPoseOptions MPOptions;
-
+  QScopedPointer<qSlicerLightWeightRobotIGTFooBarWidgetPrivate> d_ptr;	
 
 public slots:
   virtual void setMRMLScene(vtkMRMLScene *newScene);
@@ -108,18 +108,22 @@ public slots:
   virtual void onClickGravComp();
   virtual void onClickVirtualFixtures();
   virtual void onClickIDLE();
+  virtual void VisualButton();
   virtual void onClickStartVisual();
   virtual void onClickStopVisual();
   virtual void onClickShutdown();
   virtual void onClickPathImp();
   virtual void onClickMoveToPose();
   virtual void OnClickShowTCPForce();
+  virtual void MoveVF();
+  virtual void onClickPlaceEndPointManually();
   virtual void onSelectionChangedVFx(QString);
   virtual void onSelectionChangedVFy(QString);
   virtual void onSelectionChangedVFz(QString);
   virtual void onSelectionChangedVFnx(QString);
   virtual void onSelectionChangedVFny(QString);
   virtual void onSelectionChangedVFnz(QString);
+  virtual void onSelectionChangedVFphi(QString);
   virtual void onSelectionChangedMPx(QString);
   virtual void onSelectionChangedMPy(QString);
   virtual void onSelectionChangedMPz(QString);
@@ -127,11 +131,12 @@ public slots:
   virtual void onSelectionChangedMPB(QString);
   virtual void onSelectionChangedMPC(QString);
   virtual void onIndexChangedVFtype(int);
+  virtual void onCheckStatusChangedVFPreview(bool checked);
 
 protected slots:
 
 protected:
-  QScopedPointer<qSlicerLightWeightRobotIGTFooBarWidgetPrivate> d_ptr;
+
 
 private:
   Q_DECLARE_PRIVATE(qSlicerLightWeightRobotIGTFooBarWidget);
