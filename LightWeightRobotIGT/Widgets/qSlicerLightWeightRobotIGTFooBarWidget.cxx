@@ -757,6 +757,7 @@ void StartPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* c
 		if(strcmp(fiducial->GetName(),"StartPoint")!=0){
 			return;
 		}
+		thisClass->StartPointActive = false;
 		double  xyz[3] = {0};
 		double sxyz[3] = {0};
 
