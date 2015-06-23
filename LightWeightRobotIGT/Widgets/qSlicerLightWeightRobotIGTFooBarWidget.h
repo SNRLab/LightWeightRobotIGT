@@ -95,6 +95,8 @@ public:
   virtual ~qSlicerLightWeightRobotIGTFooBarWidget();
   VisualizationOptions VisualOptions;
   VirtualFixturesOptions VFOptions;
+  bool StartPointActive;
+  bool EndPointActive;
   PathImpOptions PIOptions;
   MoveToPoseOptions MPOptions;
   QScopedPointer<qSlicerLightWeightRobotIGTFooBarWidgetPrivate> d_ptr;	
@@ -115,7 +117,7 @@ public slots:
   virtual void onClickPathImp();
   virtual void onClickMoveToPose();
   virtual void OnClickShowTCPForce();
-  virtual void MoveVF();
+  virtual void UpdateVirtualFixturePreview();
   virtual void onClickPlaceEndPointManually();
   virtual void onSelectionChangedVFx(QString);
   virtual void onSelectionChangedVFy(QString);

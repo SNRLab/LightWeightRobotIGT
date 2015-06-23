@@ -152,7 +152,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>Anzahl der Mittelungen</string>
+        <string>Number of Points</string>
        </property>
       </widget>
      </widget>
