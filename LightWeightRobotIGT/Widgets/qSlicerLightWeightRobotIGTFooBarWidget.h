@@ -51,6 +51,7 @@ struct VirtualFixturesOptions{
 	std::string nZ;
 	std::string VFType;
 	std::string phi;
+	double Offset;
 
 };
 
@@ -122,16 +123,10 @@ public slots:
   virtual void onSelectionChangedVFx(QString);
   virtual void onSelectionChangedVFy(QString);
   virtual void onSelectionChangedVFz(QString);
-  virtual void onSelectionChangedVFnx(QString);
-  virtual void onSelectionChangedVFny(QString);
-  virtual void onSelectionChangedVFnz(QString);
   virtual void onSelectionChangedVFphi(QString);
   virtual void onSelectionChangedMPx(QString);
   virtual void onSelectionChangedMPy(QString);
   virtual void onSelectionChangedMPz(QString);
-  virtual void onSelectionChangedMPA(QString);
-  virtual void onSelectionChangedMPB(QString);
-  virtual void onSelectionChangedMPC(QString);
   virtual void onIndexChangedVFtype(int);
   virtual void onCheckStatusChangedVFPreview(bool checked);
 
