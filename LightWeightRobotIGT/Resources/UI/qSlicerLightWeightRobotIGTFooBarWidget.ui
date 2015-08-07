@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>499</width>
-    <height>419</height>
+    <height>449</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -94,9 +94,117 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_GravComp">
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Path Planning</string>
+      </attribute>
+      <widget class="QCheckBox" name="checkBox_VF_Preview">
+       <property name="geometry">
+        <rect>
+         <x>380</x>
+         <y>70</y>
+         <width>91</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>VF Preview</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>20</y>
+         <width>61</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>VF Type</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_VFtype">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>20</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>plane</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>cone</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>path</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_VFphi">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>70</y>
+         <width>61</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>70</y>
+         <width>31</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Angle</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="SetStartPoint">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>161</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Set Start Point</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="SetEndPoint">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>70</y>
+         <width>161</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Set End Point</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_Reg">
       <attribute name="title">
        <string>Registration</string>
       </attribute>
@@ -156,170 +264,11 @@
        </property>
       </widget>
      </widget>
-     <widget class="QWidget" name="tab_VF">
+     <widget class="QWidget" name="tab_Int">
       <attribute name="title">
-       <string>Prepositioning</string>
+       <string>Intervention</string>
       </attribute>
-      <widget class="QPushButton" name="VirtualFixtures">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>161</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Virtual Fixtures</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>230</x>
-         <y>10</y>
-         <width>21</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>n</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_14">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>71</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Point x,y,z</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_VFtype">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>60</y>
-         <width>101</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>plane</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Cone</string>
-        </property>
-       </item>
-      </widget>
-      <widget class="QLabel" name="label_15">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>61</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>VF Type</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_VFx">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>61</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_VFy">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>30</y>
-         <width>61</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_VFz">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>30</y>
-         <width>61</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="PathImp">
-       <property name="geometry">
-        <rect>
-         <x>190</x>
-         <y>90</y>
-         <width>171</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Path Impedance Control</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_VFphi">
-       <property name="geometry">
-        <rect>
-         <x>370</x>
-         <y>60</y>
-         <width>61</width>
-         <height>20</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>340</x>
-         <y>60</y>
-         <width>31</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Angle</string>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="checkBox_VF_Preview">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>60</y>
-         <width>91</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>VF Preview</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>Targeting</string>
-      </attribute>
-      <widget class="QPushButton" name="MoveToPose">
+      <widget class="QPushButton" name="LeadtoStart">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -329,50 +278,36 @@
         </rect>
        </property>
        <property name="text">
-        <string>Move to Pose</string>
+        <string>Lead to Startpose</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_11">
+      <widget class="QPushButton" name="MoveToEntrancePoint">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>40</y>
-         <width>81</width>
-         <height>16</height>
+         <width>161</width>
+         <height>23</height>
         </rect>
        </property>
        <property name="text">
-        <string>End Point x,y,z</string>
+        <string>Move to Entrance Point</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_MPx">
+      <widget class="QPushButton" name="MoveToTargetPoint">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>60</y>
-         <width>61</width>
-         <height>20</height>
+         <y>70</y>
+         <width>161</width>
+         <height>23</height>
         </rect>
        </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_MPy">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>60</y>
-         <width>61</width>
-         <height>20</height>
-        </rect>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
        </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_MPz">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>60</y>
-         <width>61</width>
-         <height>20</height>
-        </rect>
+       <property name="text">
+        <string>Move to Target Point</string>
        </property>
       </widget>
      </widget>
@@ -446,10 +381,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>VirtualFixtures</sender>
+   <sender>LeadtoStart</sender>
    <signal>clicked()</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onClickVirtualFixtures()</slot>
+   <slot>onClickLeadtoStart()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>112</x>
@@ -478,14 +413,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>MoveToPose</sender>
+   <sender>MoveToEntrancePoint</sender>
    <signal>clicked()</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onClickMoveToPose()</slot>
+   <slot>onClickMoveToEntrancePoint()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
-     <y>239</y>
+     <x>192</x>
+     <y>339</y>
     </hint>
     <hint type="destinationlabel">
      <x>253</x>
@@ -494,10 +429,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>PathImp</sender>
+   <sender>MoveToTargetPoint</sender>
    <signal>clicked()</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onClickPathImp()</slot>
+   <slot>onClickMoveToTargetPoint()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>192</x>
@@ -542,110 +477,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEdit_MPx</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedMPx(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>72</x>
-     <y>286</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_MPy</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedMPy(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>142</x>
-     <y>286</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_MPz</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedMPz(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>209</x>
-     <y>286</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_VFx</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedVFx(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>72</x>
-     <y>256</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_VFy</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedVFy(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>142</x>
-     <y>256</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lineEdit_VFz</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedVFz(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>209</x>
-     <y>256</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>comboBox_VFtype</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
    <slot>onIndexChangedVFtype(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>122</x>
-     <y>308</y>
+     <x>72</x>
+     <y>286</y>
     </hint>
     <hint type="destinationlabel">
      <x>253</x>
@@ -734,34 +573,34 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEdit_VFphi</sender>
-   <signal>textChanged(QString)</signal>
+   <sender>SetStartPoint</sender>
+   <signal>clicked()</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot>onSelectionChangedVFphi(QString)</slot>
+   <slot>onClickSetStartPoint()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>292</x>
-     <y>306</y>
+     <x>92</x>
+     <y>274</y>
     </hint>
     <hint type="destinationlabel">
-     <x>306</x>
-     <y>403</y>
+     <x>249</x>
+     <y>224</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>checkBox_VF_Preview</sender>
-   <signal>toggled(bool)</signal>
+   <sender>SetEndPoint</sender>
+   <signal>clicked()</signal>
    <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
-   <slot> onCheckStatusChangedVFPreview(bool)</slot>
+   <slot>onClickSetEndPoint()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>247</x>
-     <y>277</y>
+     <x>92</x>
+     <y>324</y>
     </hint>
     <hint type="destinationlabel">
      <x>249</x>
-     <y>209</y>
+     <y>224</y>
     </hint>
    </hints>
   </connection>
@@ -773,22 +612,17 @@
   <slot>onClickStartCyclic()</slot>
   <slot>OnClickLoadRobot()</slot>
   <slot>onClickGravComp()</slot>
-  <slot>onClickVirtualFixtures()</slot>
+  <slot>onClickSetEndPoint()</slot>
+  <slot>onClickSetStartPoint()</slot>
+  <slot>onClickLeadtoStart()</slot>
   <slot>onClickIDLE()</slot>
   <slot>VisualButton()</slot>
   <slot>onClickStopVisual()</slot>
   <slot>onClickShutdown()</slot>
-  <slot>onClickPathImp()</slot>
-  <slot>onClickMoveToPose()</slot>
-  <slot>OnClickShowTCPForce()</slot>
-  <slot>onClickPlaceEndPointManually()</slot>
-  <slot>onSelectionChangedVFx(QString)</slot>
-  <slot>onSelectionChangedVFy(QString)</slot>
-  <slot>onSelectionChangedVFz(QString)</slot>
+  <slot>onClickMoveToEntrancePoint()</slot>
+  <slot>onClickMoveToTargetPoint()</slot>
+  <slot>onClickShowTCPForce()</slot>
   <slot>onSelectionChangedVFphi(QString)</slot>
-  <slot>onSelectionChangedMPx(QString)</slot>
-  <slot>onSelectionChangedMPy(QString)</slot>
-  <slot>onSelectionChangedMPz(QString)</slot>
   <slot>onIndexChangedVFtype(int)</slot>
   <slot> onCheckStatusChangedVFPreview(bool)</slot>
  </slots>

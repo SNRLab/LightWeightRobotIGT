@@ -109,25 +109,19 @@ public slots:
   virtual void onClickStartCyclic();
   virtual void OnClickLoadRobot();
   virtual void onClickGravComp();
-  virtual void onClickVirtualFixtures();
+  virtual void onClickLeadtoStart();
   virtual void onClickIDLE();
   virtual void VisualButton();
   virtual void onClickStartVisual();
   virtual void onClickStopVisual();
   virtual void onClickShutdown();
-  virtual void onClickPathImp();
-  virtual void onClickMoveToPose();
+  virtual void onClickMoveToEntrancePoint();
+  virtual void onClickMoveToTargetPoint();
   virtual void OnClickShowTCPForce();
-  virtual void UpdateVirtualFixturePreview();
-  virtual void onClickPlaceEndPointManually();
-  virtual void onSelectionChangedVFx(QString);
-  virtual void onSelectionChangedVFy(QString);
-  virtual void onSelectionChangedVFz(QString);
   virtual void onSelectionChangedVFphi(QString);
-  virtual void onSelectionChangedMPx(QString);
-  virtual void onSelectionChangedMPy(QString);
-  virtual void onSelectionChangedMPz(QString);
   virtual void onIndexChangedVFtype(int);
+  virtual void onClickSetEndPoint();
+  virtual void onClickSetStartPoint();
   virtual void onCheckStatusChangedVFPreview(bool checked);
 
 protected slots:

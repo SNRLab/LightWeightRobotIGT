@@ -35,8 +35,19 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent);
 
   virtual vtkMRMLNode* CreateNodeInstance();
-  
 
+  enum VirtualFixtureType { PLANE, CONE, PATH };
+
+  VirtualFixtureType CurrentVirtualFixtureType;
+	
+  double ConeAngle;
+
+  double DirectionVector[3];
+  double StartPointVector[3];
+  double EndPointVector[3];
+  double VirtualFixtureVector[3];
+
+  double VirtualFixtureOffset;
   /// 
   /// Read node attributes from XML file
   virtual void ReadXMLAttributes( const char** atts);
@@ -85,6 +96,10 @@ public:
   unsigned long UID;
   virtual void SendCommand(std::string CommandString);
   void ObserveAcknowledgeString();
+  static void StartPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);
+  static void EndPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);
+  //void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);
+  void UpdateVirtualFixturePreview();
   void VirtFixOn(std::string name);
   void VirtFixOff();
   bool finish;

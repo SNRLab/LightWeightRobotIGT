@@ -10,7 +10,7 @@ or http://www.slicer.org/copyright/copyright.txt for details.
 Program:   3D Slicer
 
 =========================================================================auto=*/
-
+#define PI 3.14159265358
 // MRML includes
 #include "vtkMRMLScene.h"
 #include "vtkMRMLIGTLSessionManagerNode.h"
@@ -19,6 +19,8 @@ Program:   3D Slicer
 #include <vtkMRMLLinearTransformNode.h>
 #include <vtkMRMLModelDisplayNode.h>
 #include "vtkIGTLToMRMLString.h"
+#include <vtkMRMLAnnotationFiducialNode.h>
+#include <vtkMRMLAnnotationHierarchyNode.h>
 
 // VTK includes
 #include <vtkCommand.h>
@@ -26,11 +28,18 @@ Program:   3D Slicer
 #include <vtkCollectionIterator.h>
 
 #include <vtkCallbackCommand.h>
+#include <vtkConeSource.h>
+#include <vtkCylinder.h>
+#include <vtkCylinderSource.h>
+#include <vtkRegularPolygonSource.h>
 #include <vtkIntArray.h>
 #include <vtkMatrixToLinearTransform.h>
 #include <vtkMatrix4x4.h>
 #include <vtkObjectFactory.h>
-
+#include <vtkTransform.h>
+#include <vtkVector.h>
+#include <vtkVectorOperators.h>
+#include <vtkAlgorithmOutput.h>
 //------------------------------------------------------------------------------
 vtkMRMLNodeNewMacro(vtkMRMLIGTLSessionManagerNode);
 
@@ -49,6 +58,29 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
 
   this->SetConnectorNodeReferenceRole("connector");
   this->SetConnectorNodeReferenceMRMLAttributeName("connectorNodeRef");
+
+  this->CurrentVirtualFixtureType = VirtualFixtureType::PLANE;
+  this->ConeAngle = 90.0;
+  
+  this->DirectionVector[0]= 0;
+  this->DirectionVector[1]= 0;
+  this->DirectionVector[2]= 1;
+
+  this->StartPointVector[0] = 0;
+  this->StartPointVector[1] = 0;
+  this->StartPointVector[2] = 0;
+  
+  this->EndPointVector[0] = 0;
+  this->EndPointVector[1] = 0;
+  this->EndPointVector[2] = 0;
+
+   this->VirtualFixtureVector[0] = 0;
+  this->VirtualFixtureVector[1] = 0;
+  this->VirtualFixtureVector[2] = 0;
+
+  this->VirtualFixtureOffset = 50.0;
+
+
 
   this->SetMessageNodeReferenceRole("message");
   this->SetMessageNodeReferenceMRMLAttributeName("messageNodeRef");
@@ -412,10 +444,14 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 {
 	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
 	vtkMRMLAnnotationTextNode* anode = reinterpret_cast<vtkMRMLAnnotationTextNode*>(vtk_obj);
-	if (!thisClass->GetCommandStringNodeIDInternal())
-    {
-    return;
-    }
+
+	if(!anode){
+		return;
+	}
+	if(strcmp(anode->GetName(),"ACK")!=0){
+			return;
+	}
+
 	vtkMRMLScene* scene = thisClass->GetScene();
 	if (!scene) 
 	{
@@ -700,4 +736,372 @@ void vtkMRMLIGTLSessionManagerNode::VirtFixOff()
 	if(cone){
 		cone->VisibilityOff();
 	}
+}
+
+
+void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
+{
+	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
+	if(vtk_obj->GetClassName(),"vtkMRMLAnnotationFiducialNode"){
+
+		vtkMRMLAnnotationFiducialNode* efiducial = reinterpret_cast<vtkMRMLAnnotationFiducialNode*>(vtk_obj);
+
+		if(!efiducial){
+			return;
+		}
+
+		if(strcmp(efiducial->GetName(),"EndPoint")!=0){
+			return;
+		}
+		//if(thisClass->EndPointActive)
+		//{
+
+			efiducial->GetFiducialCoordinates(thisClass->EndPointVector);
+
+			vtkMRMLAnnotationFiducialNode* sfiducial = vtkMRMLAnnotationFiducialNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("StartPoint"));
+			if(!sfiducial){
+				return;
+			}
+			
+			sfiducial->GetFiducialCoordinates (thisClass->StartPointVector);
+		
+			thisClass->DirectionVector[0] = thisClass->StartPointVector[0] - thisClass->EndPointVector[0] ;
+			thisClass->DirectionVector[1] = thisClass->StartPointVector[1] - thisClass->EndPointVector[1];
+			thisClass->DirectionVector[2] = thisClass->StartPointVector[2] - thisClass->EndPointVector[2];
+
+			double nbetrag = sqrt(pow(thisClass->DirectionVector[0],2)+pow(thisClass->DirectionVector[1],2)+pow(thisClass->DirectionVector[2],2));
+
+			thisClass->DirectionVector[0]/=nbetrag;
+			thisClass->DirectionVector[1]/=nbetrag;
+			thisClass->DirectionVector[2]/=nbetrag;
+
+			thisClass->VirtualFixtureVector[0]= thisClass->StartPointVector[0]+ thisClass->VirtualFixtureOffset*thisClass->DirectionVector[0];
+			thisClass->VirtualFixtureVector[1]= thisClass->StartPointVector[1]+ thisClass->VirtualFixtureOffset*thisClass->DirectionVector[1];
+			thisClass->VirtualFixtureVector[2]= thisClass->StartPointVector[2]+ thisClass->VirtualFixtureOffset*thisClass->DirectionVector[2];
+
+		//}
+			thisClass->UpdateVirtualFixturePreview();
+	}
+}
+//-----------------------------------------------------------------------------
+void vtkMRMLIGTLSessionManagerNode::StartPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
+{
+	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
+	if(vtk_obj->GetClassName(),"vtkMRMLAnnotationFiducialNode"){
+		vtkMRMLAnnotationFiducialNode* fiducial = reinterpret_cast<vtkMRMLAnnotationFiducialNode*>(vtk_obj);
+
+		if(!fiducial){
+			return;
+		}
+
+		if(strcmp(fiducial->GetName(),"StartPoint")!=0){
+			return;
+		}
+		
+		fiducial->GetFiducialCoordinates (thisClass->StartPointVector);
+
+		vtkMRMLAnnotationFiducialNode *e_fid = vtkMRMLAnnotationFiducialNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("EndPoint"));
+		if(!e_fid){
+			return;
+		}
+		e_fid->GetFiducialCoordinates (thisClass->EndPointVector);
+		thisClass->DirectionVector[0] = thisClass->StartPointVector[0] - thisClass->EndPointVector[0];
+		thisClass->DirectionVector[1] = thisClass->StartPointVector[1] - thisClass->EndPointVector[1];
+		thisClass->DirectionVector[2] = thisClass->StartPointVector[2] - thisClass->EndPointVector[2];
+
+		double nbetrag = sqrt(pow(thisClass->DirectionVector[0],2)+pow(thisClass->DirectionVector[1],2)+pow(thisClass->DirectionVector[2],2));
+
+		thisClass->DirectionVector[0]/=nbetrag;
+		thisClass->DirectionVector[1]/=nbetrag;
+		thisClass->DirectionVector[2]/=nbetrag;
+
+		thisClass->VirtualFixtureVector[0]= thisClass->StartPointVector[0]+ thisClass->VirtualFixtureOffset*thisClass->DirectionVector[0];
+		thisClass->VirtualFixtureVector[1]= thisClass->StartPointVector[1]+ thisClass->VirtualFixtureOffset*thisClass->DirectionVector[1];
+		thisClass->VirtualFixtureVector[2]= thisClass->StartPointVector[2]+ thisClass->VirtualFixtureOffset*thisClass->DirectionVector[2];
+
+		vtkSmartPointer<vtkTransform> TransPath = vtkSmartPointer<vtkTransform>::New();
+		TransPath->Identity();
+
+		vtkSmartPointer<vtkMRMLLinearTransformNode> T_EE = vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+		T_EE = vtkMRMLLinearTransformNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("T_EE")); // Transformnode festlegen
+		if (!T_EE)
+		{
+			std::cout << "ERROR:No Transformnode T_EE found! " << std::endl;
+			return;
+		}
+
+		vtkSmartPointer<vtkMRMLLinearTransformNode> T_CTBase = vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+		T_CTBase = vtkMRMLLinearTransformNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("T_CT_Base")); // Transformnode festlegen
+		if (!T_CTBase)
+		{
+			std::cout << "ERROR:No Transformnode T_CTBase found! " << std::endl;
+			return;
+		}
+		vtkVector3d nvec = vtkVector3d(-thisClass->DirectionVector[0], -thisClass->DirectionVector[1], -thisClass->DirectionVector[2]);
+		nvec= nvec.Normalized();
+		vtkSmartPointer<vtkMatrix4x4> T_EE_CT  = vtkSmartPointer<vtkMatrix4x4>::New();
+		T_EE->GetMatrixTransformToWorld(T_EE_CT);
+		//T_EE_CT->Invert();
+		vtkVector3d yvec = vtkVector3d(T_EE_CT->GetElement(0,1),T_EE_CT->GetElement(1,1), T_EE_CT->GetElement(2,1));
+		//yvec.SetZ(-yvec.GetY()*nvec.GetY() + yvec.GetZ()*nvec.GetZ()/nvec.GetX());
+		yvec = yvec.Normalized();
+		vtkVector3d xvec = yvec.Cross(nvec);
+		xvec = xvec.Normalized();
+		yvec = nvec.Cross(xvec);
+		yvec= yvec.Normalized();
+		
+		#if VTK_MAJOR_VERSION <= 5
+			vtkMatrix4x4* T_Tmp_mat = T_CT_Base->GetMatrixTransformToParent();
+		#else
+			vtkSmartPointer<vtkMatrix4x4> T_Tmp_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+		#endif
+
+		T_Tmp_mat->SetElement(0,0,xvec.GetX());
+		T_Tmp_mat->SetElement(1,0,xvec.GetY());
+		T_Tmp_mat->SetElement(2,0,xvec.GetZ());
+		T_Tmp_mat->SetElement(0,1,yvec.GetX());
+		T_Tmp_mat->SetElement(1,1,yvec.GetY());
+		T_Tmp_mat->SetElement(2,1,yvec.GetZ());
+		T_Tmp_mat->SetElement(0,2,nvec.GetX());
+		T_Tmp_mat->SetElement(1,2,nvec.GetY());
+		T_Tmp_mat->SetElement(2,2,nvec.GetZ());
+
+
+		//double  beta = asin(nvec[0])* 180.0 / PI;
+		//double alpha = -atan2(nvec[1],nvec[2])* 180.0 / PI;
+		TransPath->SetMatrix(T_Tmp_mat);
+		double EulerAngles[3];
+		TransPath->GetOrientation(EulerAngles);
+		
+		/*std::cerr << "alpha "<<alpha<<std::endl<<"; beta "<<beta<<std::endl;
+		TransPath->PostMultiply();
+		TransPath->RotateX(alpha);
+		TransPath->RotateY(beta);
+		TransPath->Translate(thisClass->EndPointVector[0],thisClass->EndPointVector[1], thisClass->EndPointVector[2] );
+		TransPath->Update();
+
+		std::cerr << "ERROR:Transform Node " 
+			<<TransPath->GetMatrix()->GetElement(0,0)<< "; "<<TransPath->GetMatrix()->GetElement(0,1)<< "; "
+			<<TransPath->GetMatrix()->GetElement(0,2)<< ";"<<TransPath->GetMatrix()->GetElement(0,3)<< "; "<< std::endl
+			<<TransPath->GetMatrix()->GetElement(1,0)<< "; "<<TransPath->GetMatrix()->GetElement(1,1)<< "; "
+			<<TransPath->GetMatrix()->GetElement(1,2)<< "; "<<TransPath->GetMatrix()->GetElement(1,3)<< "; "<< std::endl
+			<<TransPath->GetMatrix()->GetElement(2,0)<< "; "<<TransPath->GetMatrix()->GetElement(2,1)<< "; "
+			<<TransPath->GetMatrix()->GetElement(2,2)<< "; "<<TransPath->GetMatrix()->GetElement(2,3)<< "; "<< std::endl
+			<< std::endl;*/
+		
+
+		
+
+
+		
+
+		vtkSmartPointer<vtkMatrix4x4> Tmp= vtkSmartPointer<vtkMatrix4x4>::New();
+		vtkSmartPointer<vtkMatrix4x4> TargetOrientation = vtkSmartPointer<vtkMatrix4x4>::New();
+
+		vtkMatrix4x4::Multiply4x4(T_CTBase->GetMatrixTransformFromParent(),TransPath->GetMatrix(), TargetOrientation); 
+		
+		
+		//vtkMatrix4x4::Multiply4x4(Tmp, TransPath->GetMatrix(), TargetOrientation);
+
+		std::cerr << "ERROR:Transform Node "
+			<<TargetOrientation->GetElement(0,0)<< "; "<<TargetOrientation->GetElement(0,1)<< "; "
+			<<TargetOrientation->GetElement(0,2)<< ";"<<TargetOrientation->GetElement(0,3)<< "; "<< std::endl
+			<<TargetOrientation->GetElement(1,0)<< "; "<<TargetOrientation->GetElement(1,1)<< "; "
+			<<TargetOrientation->GetElement(1,2)<< "; "<<TargetOrientation->GetElement(1,3)<< "; "<< std::endl
+			<<TargetOrientation->GetElement(2,0)<< "; "<<TargetOrientation->GetElement(2,1)<< "; "
+			<<TargetOrientation->GetElement(2,2)<< "; "<<TargetOrientation->GetElement(2,3)<< "; "<< std::endl
+			<< std::endl;
+
+		vtkSmartPointer<vtkMRMLLinearTransformNode> T_Ori= vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+		if(!thisClass->GetScene()->GetFirstNodeByName("T_Ori")){
+			T_Ori->SetName("T_Ori");
+			T_Ori->SetScene(thisClass->GetScene());
+		}else{
+			T_Ori = vtkMRMLLinearTransformNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("T_Ori"));
+
+		}
+		T_Ori->SetMatrixTransformToParent(TargetOrientation);
+		thisClass->GetScene()->AddNode(T_Ori);
+		thisClass->UpdateVirtualFixturePreview();
+	}
+}
+
+
+void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
+	
+	vtkSmartPointer<vtkConeSource> cone=vtkSmartPointer<vtkConeSource>::New();
+	vtkSmartPointer<vtkRegularPolygonSource> plane=vtkSmartPointer<vtkRegularPolygonSource>::New();
+	vtkSmartPointer<vtkCylinderSource> path =vtkSmartPointer<vtkCylinderSource>::New();
+	vtkSmartPointer<vtkAlgorithmOutput> VFPolyData=vtkSmartPointer<vtkAlgorithmOutput>::New();
+	vtkSmartPointer< vtkMRMLLinearTransformNode > trans = vtkSmartPointer< vtkMRMLLinearTransformNode >::New();
+	if(this->GetScene()->GetFirstNodeByName("T_VF"))
+		{
+			trans = vtkMRMLLinearTransformNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("T_VF")); 
+	}else{
+		trans->SetName("T_VF");
+		trans->SetScene(this->GetScene());
+		this->GetScene()->AddNode(trans);
+	}
+	if(this->CurrentVirtualFixtureType == VirtualFixtureType::CONE)
+	{
+			
+		double height = 200; 
+		double radius = height*tan(ConeAngle*PI/360); 
+		double nbetrag = sqrt(pow(DirectionVector[0],2)+pow(DirectionVector[1],2)+pow(DirectionVector[2],2));
+		double cx = height* DirectionVector[0]/(2*nbetrag) + this->VirtualFixtureVector[0];
+		double cy = height* DirectionVector[1]/(2*nbetrag) + this->VirtualFixtureVector[1];
+		double cz = height* DirectionVector[2]/(2*nbetrag) + this->VirtualFixtureVector[2];
+
+		cone->SetDirection(-1*DirectionVector[0],-1*DirectionVector[1],-1*DirectionVector[2]);
+		cone->SetRadius(radius);
+		cone->SetHeight(height);
+		cone->SetResolution(50); 
+		cone->SetCenter(cx,cy,cz); 
+		
+		VFPolyData = cone->GetOutputPort();		
+	}
+	else if(this->CurrentVirtualFixtureType == VirtualFixtureType::PLANE)
+	{
+	
+		vtkSmartPointer<vtkRegularPolygonSource> planeb=vtkSmartPointer<vtkRegularPolygonSource>::New();	
+		
+		float size = 500;//  --> Hier Größe der Fläche anpassen
+		planeb->SetNormal(DirectionVector[0],DirectionVector[1],DirectionVector[2]);
+		planeb->SetCenter(this->VirtualFixtureVector[0],this->VirtualFixtureVector[1],this->VirtualFixtureVector[2]);
+		planeb->SetNumberOfSides(4);
+		planeb->SetRadius(size); //
+	    
+		plane->SetNormal(-1*DirectionVector[0],-1*DirectionVector[1],-1*DirectionVector[2]);
+		plane->SetCenter(this->VirtualFixtureVector[0],this->VirtualFixtureVector[1],this->VirtualFixtureVector[2]);
+		plane->SetNumberOfSides(4);
+		plane->SetRadius(size);
+
+		VFPolyData = plane->GetOutputPort();
+		
+	}else{
+		
+	
+		vtkSmartPointer<vtkTransform> transform = vtkSmartPointer<vtkTransform>::New();
+		transform->Identity();
+		vtkSmartPointer<vtkMRMLLinearTransformNode> tnode = vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+		tnode = vtkMRMLLinearTransformNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("T_EE")); // Transformnode festlegen
+		if (!tnode)
+		{
+			std::cout << "ERROR:No Transformnode T_EE found! " << std::endl;
+			return;
+		}
+	
+
+		double dPosition[3] = {0.0, 0.0, 0.0};
+#if VTK_MAJOR_VERSION <= 5
+		vtkMatrix4x4* transformMatrix = tnode->GetMatrixTransformToParent();
+		dPosition[0] = transformMatrix->GetElement(0,3);
+		dPosition[1] = transformMatrix->GetElement(1,3);
+		dPosition[2] = transformMatrix->GetElement(2,3);
+#else
+		vtkSmartPointer<vtkMatrix4x4> transformMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
+		tnode->GetMatrixTransformToWorld(transformMatrix.GetPointer());
+		dPosition[0] = transformMatrix->GetElement(0,3);
+		dPosition[1] = transformMatrix->GetElement(1,3);
+		dPosition[2] = transformMatrix->GetElement(2,3);
+#endif
+
+		vtkVector3d CurrentPosition = vtkVector3d(dPosition);
+		vtkVector3d TargetPosition = vtkVector3d(this->VirtualFixtureVector[0],this->VirtualFixtureVector[1],this->VirtualFixtureVector[2]);
+	
+		vtkVector3d uvec = TargetPosition - CurrentPosition;
+		vtkVector3d nvec = uvec.Normalized();
+		double  beta = -asin(nvec[0])* 180.0 / PI;
+		double alpha = atan2(nvec[2],nvec[1])* 180.0 / PI;
+		transform->RotateX(alpha);
+		transform->RotateZ(beta);
+		double* rotation = transform->GetOrientation();
+	
+		vtkSmartPointer<vtkMatrix4x4> mat = transform->GetMatrix();
+		mat = vtkMatrix4x4::SafeDownCast(mat);
+		mat->SetElement(0,3,this->VirtualFixtureVector[0]);
+		mat->SetElement(1,3,this->VirtualFixtureVector[1]);
+		mat->SetElement(2,3,this->VirtualFixtureVector[2] );
+
+		trans->ApplyTransformMatrix(mat);
+		
+		
+		double height =uvec.Norm();  
+		double radius = 10;  
+
+		path->SetHeight(height);
+		path->SetRadius(radius);
+		//Connect to transform...
+		path->SetCenter(0, 0 - height/2, 0);
+		path->SetResolution(50); // Auflösung des Kegels
+
+		VFPolyData = path->GetOutputPort();
+
+	}
+	// Modelle finden oder erstellen
+	if (vtkMRMLModelNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("VF_Temp")))
+	{
+		vtkMRMLModelNode *model = vtkMRMLModelNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("VF_Temp"));
+		vtkMRMLModelDisplayNode *modelDisplay = vtkMRMLModelDisplayNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("VF_DisplayTemp"));
+		
+		model->Reset();
+		//modelDisplay->Reset();
+
+		modelDisplay->SetColor(0,0,1) ;
+		modelDisplay->SliceIntersectionVisibilityOn();
+		modelDisplay->SetOpacity(0.2) ;
+		model->SetName("VF_Temp");
+		model->SetScene(this->GetScene());
+		model->SetAndObserveDisplayNodeID(modelDisplay->GetID());
+		//if(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"))
+		//{
+			//vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+			//T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
+			//trans->SetAndObserveTransformNodeID( T_CT_Base->GetID());
+		if(!(this->CurrentVirtualFixtureType == VirtualFixtureType::PATH)){
+				trans->SetMatrixTransformToParent(vtkMatrix4x4::New());
+			}
+			model->SetAndObserveTransformNodeID(trans->GetID());
+		//}
+		//else{ 
+		//	std::cout<<"No Transformation T_CT_Base found!"<<std::endl;
+		//	return;
+		//}
+	
+		model->SetPolyDataConnection(VFPolyData);
+	}
+	else
+	{
+		vtkSmartPointer<vtkMRMLModelNode> model=vtkSmartPointer<vtkMRMLModelNode>::New();
+		vtkSmartPointer<vtkMRMLModelDisplayNode> modelDisplay=vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
+		model->SetScene(this->GetScene());
+		modelDisplay->SetScene(this->GetScene());
+		modelDisplay->SetName("VF_DisplayTemp");
+		model->SetName("VF_Temp");
+		
+
+		modelDisplay->SetColor(0,0,1) ;
+		modelDisplay->SetOpacity(0.2) ;
+		modelDisplay->SliceIntersectionVisibilityOn();
+		
+		model->SetAndObserveDisplayNodeID(modelDisplay->GetID());
+
+		
+		if(this->GetScene()->GetFirstNodeByName("T_CT_Base"))
+		{
+			vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+			T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("T_CT_Base"));
+			model->SetAndObserveTransformNodeID( T_CT_Base->GetID() );
+		}
+		else 
+			std::cout<<"No Transformation T_CT_Base found!"<<std::endl;	
+
+		model->SetPolyDataConnection(VFPolyData);
+	   
+		this->GetScene()->AddNode(model);
+		this->GetScene()->AddNode(modelDisplay);
+	}
+	
+	
+
 }
