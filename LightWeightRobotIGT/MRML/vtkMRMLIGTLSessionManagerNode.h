@@ -95,7 +95,7 @@ public:
   const char *GetConnectorNodeID();
   unsigned long UID;
   virtual void SendCommand(std::string CommandString);
-  void ObserveAcknowledgeString();
+  int ObserveAcknowledgeString();
   static void StartPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);
   static void EndPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);
   //void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);

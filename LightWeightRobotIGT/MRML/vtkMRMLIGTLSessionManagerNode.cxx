@@ -402,7 +402,9 @@ void vtkMRMLIGTLSessionManagerNode::SendCommand(std::string CommandString)
   ss << this->UID;
   std::string TmpCmd = "CMD_" + ss.str();
   std::cout << "Commmand :  "<<CommandString<<std::endl;
+  //tnode->DisableModifiedEventOn();
   tnode->SetName(TmpCmd.c_str());
+  //tnode->DisableModifiedEventOff();
   tnode->SetTextLabel(CommandString.data());
   if(UID>999999999999){
 	  UID =0;
@@ -412,31 +414,32 @@ void vtkMRMLIGTLSessionManagerNode::SendCommand(std::string CommandString)
 
 void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data);
 
-void vtkMRMLIGTLSessionManagerNode::ObserveAcknowledgeString()
+int vtkMRMLIGTLSessionManagerNode::ObserveAcknowledgeString()
 {
  vtkSmartPointer<vtkCallbackCommand> CallBack = vtkSmartPointer<vtkCallbackCommand>::New();
   vtkMRMLScene* scene = this->GetScene();
   if (!scene) 
     {
-    return;
+    return 0;
     }
   vtkMRMLIGTLConnectorNode* cnode = vtkMRMLIGTLConnectorNode::SafeDownCast(scene->GetNodeByID(this->ConnectorNodeIDInternal));
   if (!cnode) // There is no connector node with the specified MRML ID
     {
-    return;
+    return 0;
     }
-  vtkMRMLNode* node = scene->GetFirstNodeByName("ACK");;
+  vtkMRMLNode* node = scene->GetFirstNodeByName("ACK");
   
   vtkMRMLAnnotationTextNode* tnode = vtkMRMLAnnotationTextNode::SafeDownCast(node);
 
   if (!tnode)
   {
-    return;
+    return 0;
   }
 
   CallBack->SetClientData(this);
   CallBack->SetCallback(NodeChanged);
   tnode->AddObserver( vtkMRMLAnnotationTextNode::ValueModifiedEvent, CallBack); 
+  return 1;
   //CallBack->Delete();
 }
 
@@ -780,7 +783,111 @@ void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj,
 			thisClass->VirtualFixtureVector[2]= thisClass->StartPointVector[2]+ thisClass->VirtualFixtureOffset*thisClass->DirectionVector[2];
 
 		//}
-			thisClass->UpdateVirtualFixturePreview();
+			vtkSmartPointer<vtkTransform> TransPath = vtkSmartPointer<vtkTransform>::New();
+		TransPath->Identity();
+
+		vtkSmartPointer<vtkMRMLLinearTransformNode> T_EE = vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+		T_EE = vtkMRMLLinearTransformNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("T_EE")); // Transformnode festlegen
+		if (!T_EE)
+		{
+			std::cout << "ERROR:No Transformnode T_EE found! " << std::endl;
+			return;
+		}
+
+		vtkSmartPointer<vtkMRMLLinearTransformNode> T_CTBase = vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+		T_CTBase = vtkMRMLLinearTransformNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("T_CT_Base")); // Transformnode festlegen
+		if (!T_CTBase)
+		{
+			std::cout << "ERROR:No Transformnode T_CTBase found! " << std::endl;
+			return;
+		}
+		vtkVector3d nvec = vtkVector3d(-thisClass->DirectionVector[0], -thisClass->DirectionVector[1], -thisClass->DirectionVector[2]);
+		nvec= nvec.Normalized();
+		vtkSmartPointer<vtkMatrix4x4> T_EE_CT  = vtkSmartPointer<vtkMatrix4x4>::New();
+		T_EE->GetMatrixTransformToWorld(T_EE_CT);
+		//T_EE_CT->Invert();
+		vtkVector3d yvec = vtkVector3d(T_EE_CT->GetElement(0,1),T_EE_CT->GetElement(1,1), T_EE_CT->GetElement(2,1));
+		//yvec.SetZ(-yvec.GetY()*nvec.GetY() + yvec.GetZ()*nvec.GetZ()/nvec.GetX());
+		yvec = yvec.Normalized();
+		vtkVector3d xvec = yvec.Cross(nvec);
+		xvec = xvec.Normalized();
+		yvec = nvec.Cross(xvec);
+		yvec= yvec.Normalized();
+		
+		#if VTK_MAJOR_VERSION <= 5
+			vtkMatrix4x4* T_Tmp_mat = T_CT_Base->GetMatrixTransformToParent();
+		#else
+			vtkSmartPointer<vtkMatrix4x4> T_Tmp_mat = vtkSmartPointer<vtkMatrix4x4>::New();
+		#endif
+
+		T_Tmp_mat->SetElement(0,0,xvec.GetX());
+		T_Tmp_mat->SetElement(1,0,xvec.GetY());
+		T_Tmp_mat->SetElement(2,0,xvec.GetZ());
+		T_Tmp_mat->SetElement(0,1,yvec.GetX());
+		T_Tmp_mat->SetElement(1,1,yvec.GetY());
+		T_Tmp_mat->SetElement(2,1,yvec.GetZ());
+		T_Tmp_mat->SetElement(0,2,nvec.GetX());
+		T_Tmp_mat->SetElement(1,2,nvec.GetY());
+		T_Tmp_mat->SetElement(2,2,nvec.GetZ());
+
+
+		//double  beta = asin(nvec[0])* 180.0 / PI;
+		//double alpha = -atan2(nvec[1],nvec[2])* 180.0 / PI;
+		TransPath->SetMatrix(T_Tmp_mat);
+		double EulerAngles[3];
+		TransPath->GetOrientation(EulerAngles);
+		
+		/*std::cerr << "alpha "<<alpha<<std::endl<<"; beta "<<beta<<std::endl;
+		TransPath->PostMultiply();
+		TransPath->RotateX(alpha);
+		TransPath->RotateY(beta);
+		TransPath->Translate(thisClass->EndPointVector[0],thisClass->EndPointVector[1], thisClass->EndPointVector[2] );
+		TransPath->Update();
+
+		std::cerr << "ERROR:Transform Node " 
+			<<TransPath->GetMatrix()->GetElement(0,0)<< "; "<<TransPath->GetMatrix()->GetElement(0,1)<< "; "
+			<<TransPath->GetMatrix()->GetElement(0,2)<< ";"<<TransPath->GetMatrix()->GetElement(0,3)<< "; "<< std::endl
+			<<TransPath->GetMatrix()->GetElement(1,0)<< "; "<<TransPath->GetMatrix()->GetElement(1,1)<< "; "
+			<<TransPath->GetMatrix()->GetElement(1,2)<< "; "<<TransPath->GetMatrix()->GetElement(1,3)<< "; "<< std::endl
+			<<TransPath->GetMatrix()->GetElement(2,0)<< "; "<<TransPath->GetMatrix()->GetElement(2,1)<< "; "
+			<<TransPath->GetMatrix()->GetElement(2,2)<< "; "<<TransPath->GetMatrix()->GetElement(2,3)<< "; "<< std::endl
+			<< std::endl;*/
+		
+
+		
+
+
+		
+
+		vtkSmartPointer<vtkMatrix4x4> Tmp= vtkSmartPointer<vtkMatrix4x4>::New();
+		vtkSmartPointer<vtkMatrix4x4> TargetOrientation = vtkSmartPointer<vtkMatrix4x4>::New();
+
+		vtkMatrix4x4::Multiply4x4(T_CTBase->GetMatrixTransformFromParent(),TransPath->GetMatrix(), TargetOrientation); 
+		
+		
+		//vtkMatrix4x4::Multiply4x4(Tmp, TransPath->GetMatrix(), TargetOrientation);
+
+		std::cerr << "ERROR:Transform Node "
+			<<TargetOrientation->GetElement(0,0)<< "; "<<TargetOrientation->GetElement(0,1)<< "; "
+			<<TargetOrientation->GetElement(0,2)<< ";"<<TargetOrientation->GetElement(0,3)<< "; "<< std::endl
+			<<TargetOrientation->GetElement(1,0)<< "; "<<TargetOrientation->GetElement(1,1)<< "; "
+			<<TargetOrientation->GetElement(1,2)<< "; "<<TargetOrientation->GetElement(1,3)<< "; "<< std::endl
+			<<TargetOrientation->GetElement(2,0)<< "; "<<TargetOrientation->GetElement(2,1)<< "; "
+			<<TargetOrientation->GetElement(2,2)<< "; "<<TargetOrientation->GetElement(2,3)<< "; "<< std::endl
+			<< std::endl;
+
+		vtkSmartPointer<vtkMRMLLinearTransformNode> T_Ori= vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+		if(!thisClass->GetScene()->GetFirstNodeByName("T_Ori")){
+			T_Ori->SetName("T_Ori");
+			T_Ori->SetScene(thisClass->GetScene());
+		}else{
+			T_Ori = vtkMRMLLinearTransformNode::SafeDownCast(thisClass->GetScene()->GetFirstNodeByName("T_Ori"));
+
+		}
+		T_Ori->SetMatrixTransformToParent(TargetOrientation);
+		thisClass->GetScene()->AddNode(T_Ori);
+		thisClass->UpdateVirtualFixturePreview();
+
 	}
 }
 //-----------------------------------------------------------------------------

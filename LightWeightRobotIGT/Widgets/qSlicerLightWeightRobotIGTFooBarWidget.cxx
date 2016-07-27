@@ -45,6 +45,7 @@
 #include <qSlicerAbstractCoreModule.h>
 #include "qSlicerLayoutManager.h"
 #include "qSlicerModuleManager.h"
+#include "qSlicerModuleSelectorToolBar.h"
 //#include "ui_qSlicerRALOModuleWidget.h"
 
 // MRML includes
@@ -146,14 +147,14 @@ qSlicerLightWeightRobotIGTFooBarWidget
   {
 	d->annotationLogic  = vtkSlicerAnnotationModuleLogic::SafeDownCast(annotationModule->logic());
   }
-  
-
+ // this->ModulesMenu = qSlicerModulesMenu::(QObject::tr("Modules"), parentWidget);
   d->LineEditRobotPath->setText( "C:\\Users\\OptTrack_user\\Documents\\GitHub\\ModellIiwa\\" );
 
   VisualOptions.COFType = "rob";
   
-  EndPointActive = true;
-  StartPointActive = true;
+  this->EndPointActive = false;
+  this->StartPointActive = false;
+  this->HomePointActive = false;
 
   MPOptions.A = "180";
   MPOptions.B = "0";
@@ -166,7 +167,15 @@ qSlicerLightWeightRobotIGTFooBarWidget
 
   d->lineEdit_VFphi->setEnabled(false);
   d->VisualActive = false;
+  d->GravComp->setEnabled(false);
+  d->IDLE->setEnabled(false);
+  d->MoveManual->setEnabled(false);
+  d->ShutDown->setEnabled(false);
+  d->LoadRobot->setEnabled(false);
+  d->GetFiducial->setEnabled(false);
   d->MoveToTargetPoint->setEnabled(false);
+  d->BackToStart->setEnabled(false);
+  d->LeadtoStart->setEnabled(false);
   d->MoveToEntrancePoint->setEnabled(false);
 }
 
@@ -245,6 +254,9 @@ onClickGravComp()
     {
     snode->SendCommand(CommandString);
     }
+  d->BackToStart->setEnabled(false);
+  d->MoveToEntrancePoint->setEnabled(false);
+  d->MoveToTargetPoint->setEnabled(false);
 
 }
 
@@ -316,6 +328,12 @@ VirtualFixturesPositionBaseFrame = T_CT_Base->GetTransformFromParent()->Transfor
     snode->SendCommand(CommandString);
     }
 	
+	d->MoveToEntrancePoint->setEnabled(false);  //MoveToPose Button aktivieren
+	d->MoveToTargetPoint->setEnabled(false);
+	d->BackToStart->setEnabled(false);
+	this->HomePointActive =true;
+	this->StartPointActive = false;
+	this->EndPointActive = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -336,6 +354,26 @@ onClickIDLE()
     {
     snode->SendCommand(CommandString);
     }
+  d->GravComp->setEnabled(true);
+  d->MoveManual->setEnabled(true);
+  if(vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("StartPoint")) && vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint"))) {
+	  if(this->EndPointActive){
+		  d->MoveToEntrancePoint->setEnabled(true);
+		  d->BackToStart->setEnabled(false);
+		  d->LeadtoStart->setEnabled(false);
+		  d->MoveToTargetPoint->setEnabled(true);
+	  }else if(this->StartPointActive){
+		  d->LeadtoStart->setEnabled(true);
+		  d->BackToStart->setEnabled(true);
+		  d->MoveToTargetPoint->setEnabled(true);
+		  d->MoveToEntrancePoint->setEnabled(true);
+	  }else if(this->HomePointActive){
+		  d->LeadtoStart->setEnabled(true);
+		  d->BackToStart->setEnabled(true);
+		  d->MoveToTargetPoint->setEnabled(false);
+		  d->MoveToEntrancePoint->setEnabled(true);
+	  }
+  }
 
 }
 
@@ -378,6 +416,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget:: onClickStartVisual()
     snode->SendCommand(CommandString);
     }
 
+
 }
 
 //-----------------------------------------------------------------------------
@@ -397,7 +436,6 @@ void qSlicerLightWeightRobotIGTFooBarWidget:: onClickStopVisual()
     {
     snode->SendCommand(CommandString);
     }
-
 }
 
 
@@ -417,7 +455,34 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickShutdown(){
     {
     snode->SendCommand(CommandString);
     }
+  d->GravComp->setEnabled(false);
+  d->IDLE->setEnabled(false);
+  d->MoveManual->setEnabled(false);
+  d->ShutDown->setEnabled(false);
+  d->LoadRobot->setEnabled(false);
+  d->GetFiducial->setEnabled(false);
+  d->MoveToTargetPoint->setEnabled(false);
+  d->BackToStart->setEnabled(false);
+  d->LeadtoStart->setEnabled(false);
+  d->MoveToEntrancePoint->setEnabled(false);
+  this->HomePointActive=false;
+	this->StartPointActive=false;
+	this->EndPointActive=false;
 
+	vtkMRMLIGTLConnectorNode* cnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(this->mrmlScene()->GetNodeByID(snode->ConnectorNodeIDInternal));
+	if(!cnode){
+		return;
+	}
+	snode->UID = 1;
+	cnode->Stop();
+	vtkMRMLIGTLConnectorNode* Visualcnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("VisualizationConnectorNode"));
+	if(!Visualcnode){
+		return;
+	}
+	Visualcnode->Stop();
+	
+	
+	
 }
 
 
@@ -476,7 +541,14 @@ QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(2,2),'f', 8).t
     {
 		snode->SendCommand(CommandString);
     }
-	
+	d->MoveToTargetPoint->setEnabled(true); 
+	d->BackToStart->setEnabled(true);
+	d->LeadtoStart->setEnabled(false);
+	d->GravComp->setEnabled(false);
+	d->MoveManual->setEnabled(false);
+	this->EndPointActive=false;
+	this->StartPointActive= true;
+	this->HomePointActive =false;
 
 }
 
@@ -532,10 +604,83 @@ QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(2,2),'f', 8).t
     {
 		snode->SendCommand(CommandString);
     }
+  d->BackToStart->setEnabled(false);
+  d->LeadtoStart->setEnabled(false);
+  d->GravComp->setEnabled(false);
+  d->MoveManual->setEnabled(false);
+  this->EndPointActive=true;
+  this->StartPointActive=false;
+  this->HomePointActive=false;
+
 	
 }
 //-----------------------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::onClickBackToStart(){
+Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+  std::string CommandString;
 
+ vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+ T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
+ if(!T_CT_Base){
+	 return;
+ }
+
+ vtkSmartPointer<vtkMRMLLinearTransformNode> T_Ori=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+ T_Ori= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_Ori"));
+ if(!T_Ori){
+	 return;
+ }
+   vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
+  vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
+  if(!snode){
+	  return;
+  }
+
+vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_BaseOrientation=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+T_CT_BaseOrientation->SetMatrixTransformToParent(T_CT_Base->GetMatrixTransformToParent());;
+
+double  StartPosition[4] = {snode->VirtualFixtureVector[0], snode->VirtualFixtureVector[1], snode->VirtualFixtureVector[2], 1.0};
+ double  *StartPositionBaseFrame;
+
+StartPositionBaseFrame = T_CT_Base->GetTransformFromParent()->TransformPoint(StartPosition);
+ 
+CommandString = "MoveToPose;" + VisualOptions.COFType + ";" +  
+QString::number(StartPositionBaseFrame[0],'f', 8).toStdString() +";" + 
+QString::number(StartPositionBaseFrame[1],'f', 8).toStdString()+ ";" + 
+QString::number(StartPositionBaseFrame[2],'f', 8).toStdString() +";" + 
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(0,0),'f', 8).toStdString() +";"+ 
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(0,1),'f', 8).toStdString() +";"+
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(0,2),'f', 8).toStdString() +";"+
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(1,0),'f', 8).toStdString() +";"+
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(1,1),'f', 8).toStdString() +";"+
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(1,2),'f', 8).toStdString() +";"+
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(2,0),'f', 8).toStdString() +";"+
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(2,1),'f', 8).toStdString() +";"+
+QString::number(T_Ori->GetMatrixTransformFromParent()->GetElement(2,2),'f', 8).toStdString() +";";
+
+
+
+
+  if (!d->SessionManagerNodeSelector)
+    {
+    return;
+    }
+
+  if (snode)
+    {
+		snode->SendCommand(CommandString);
+    }
+  d->MoveToTargetPoint->setEnabled(false);
+  d->MoveToEntrancePoint->setEnabled(true);
+  d->LeadtoStart->setEnabled(false);
+  d->GravComp->setEnabled(false);
+  d->MoveManual->setEnabled(false);
+  this->HomePointActive=true;
+  this->StartPointActive =false;
+  this->EndPointActive=false;
+
+}
+//-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetEndPoint(){
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 	vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
@@ -591,9 +736,13 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetEndPoint(){
 		   fiducial->Initialize(this->mrmlScene());
 		  
 		   d->annotationLogic->GetActiveHierarchyNode()->SetAssociatedNodeID(fiducial->GetID());
-		   fiducial->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack); //add observer to fiducial
-
-		   d->MoveToEntrancePoint->setEnabled(true);    //MoveToPose Button aktivieren
+		   fiducial->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack); 
+		   vtkMRMLIGTLConnectorNode* Visualcnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("VisualizationConnectorNode"));
+		   //add observer to fiducial
+		   if(vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("StartPoint")) && Visualcnode->GetState() == 2 ){
+				d->LeadtoStart->setEnabled(true); 
+		   }
+		   
 
 		}
 		// Falls End Point bereits vorhanden
@@ -609,6 +758,8 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetEndPoint(){
 	//}
 }
 
+
+//-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetStartPoint(){
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 	vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
@@ -664,11 +815,14 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetStartPoint(){
 		   fiducial->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack); //add observer to fiducial
 		   fiducial->SetScene(this->mrmlScene());
 		   this->mrmlScene()->AddNode(fiducial);
-		   d->MoveToEntrancePoint->setEnabled(true);    //MoveToPose Button aktivieren
-		}
 		// Falls End Point bereits vorhanden
+		  
+		   vtkMRMLIGTLConnectorNode* Visualcnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("VisualizationConnectorNode"));
+		  if(vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint")) &&  Visualcnode->GetState() == 2 ){
+				d->LeadtoStart->setEnabled(true); 
+		   }
 		
-		else
+		}else
 		 {	   
 			   vtkMRMLAnnotationFiducialNode *fid = vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("StartPoint"));
 			   fid->RemoveObserver(CallBack);
@@ -679,6 +833,8 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetStartPoint(){
 }
 
 
+
+//-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFphi(QString editText){
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 		vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
@@ -686,6 +842,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFphi(QString edi
 	VFOptions.phi = editText.toAscii().data();
 	snode->UpdateVirtualFixturePreview();
 }
+//-----------------------------------------------------------------------------
 //---------------------------------------------------------------------------------
 /*void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPx(QString editText){
 		
@@ -1021,6 +1178,7 @@ void TransformChanged(vtkObject* vtk_obj, unsigned long event, void* client_data
 }
 
 
+//-------------------------------------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::OnClickLoadRobot (){
    
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
@@ -1200,21 +1358,56 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickStartCyclic(){
 			return;
 		}
 		cnode->Start();
+		vtksys::SystemTools::Delay(100);
 		vtkMRMLIGTLConnectorNode* Visualcnode =  vtkMRMLIGTLConnectorNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("VisualizationConnectorNode"));
 		if(!Visualcnode){
 			return;
 		}
+		
 		Visualcnode->Start();
-                vtksys::SystemTools::Delay(500);
-		snode->SendCommand("IDLE;;");
-                vtksys::SystemTools::Delay(50);
-		snode->SendCommand("IDLE;;");
-                vtksys::SystemTools::Delay(100);
-		cnode->ImportDataFromCircularBuffer();
-		int i = cnode->GetNumberOfIncomingMRMLNodes();
-                vtksys::SystemTools::Delay(50);
-		snode->ObserveAcknowledgeString();
+        vtksys::SystemTools::Delay(100);
+		snode->SendCommand("IDLE;");
+		vtksys::SystemTools::Delay(500);
+		for(int k = 0;k<50; k++){
+			cnode->ImportDataFromCircularBuffer();
+			if(vtkMRMLNode* node = this->mrmlScene()->GetFirstNodeByName("ACK")){
+				vtksys::SystemTools::Delay(50);
+				int r = snode->ObserveAcknowledgeString();
+				if(r){
+					k=50;
+					d->GravComp->setEnabled(true);
+					d->IDLE->setEnabled(true);
+					d->MoveManual->setEnabled(true);
+					d->ShutDown->setEnabled(true);
+					this->EndPointActive=false;
+					this->HomePointActive=false;
+					this->StartPointActive=false;
+				}
 
+			}else{
+				snode->SendCommand("IDLE;");
+				vtksys::SystemTools::Delay(50);
+			}
+		}
+		snode->SendCommand("IDLE;");
+		vtksys::SystemTools::Delay(50);
+		for(int l = 0;l<50; l++){
+			Visualcnode->ImportDataFromCircularBuffer();
+			vtkSmartPointer<vtkMRMLLinearTransformNode> T_EE=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
+			T_EE = vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_EE"));
+			if (!T_EE)
+			{
+				vtksys::SystemTools::Delay(50);
+				std::cerr << "ERROR:No Transformnode T_EE found! " << std::endl;
+			}else{
+				d->LoadRobot->setEnabled(true);
+				d->GetFiducial->setEnabled(true);
+				if(vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("StartPoint")) && vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint"))) {
+						d->LeadtoStart->setEnabled(true);
+					}
+				l=50;
+			}
+		}
 
     }
 
@@ -1278,4 +1471,19 @@ void qSlicerLightWeightRobotIGTFooBarWidget::OnClickShowTCPForce(){
    modelDisplay->Delete();
    T_TCPForce->Delete();
    //polydata->Delete();
+}
+
+//---------------------------------------------------------------
+void qSlicerLightWeightRobotIGTFooBarWidget::onClickFiducialRegistration(){
+	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
+	
+	qSlicerAbstractCoreModule* registrationFiducialModule = qSlicerCoreApplication::application()->moduleManager()->module("FiducialRegistration");
+	if(!registrationFiducialModule){
+		std::cout << "Error finding Module Fiducial Registration module!"<<std::endl;
+		return;
+	}
+	
+}
+void qSlicerLightWeightRobotIGTFooBarWidget::onCheckStatusChangedAFC(bool checked){
+
 }

@@ -94,7 +94,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -103,14 +103,14 @@
       <widget class="QCheckBox" name="checkBox_VF_Preview">
        <property name="geometry">
         <rect>
-         <x>380</x>
-         <y>70</y>
-         <width>91</width>
+         <x>10</x>
+         <y>90</y>
+         <width>181</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
-        <string>VF Preview</string>
+        <string>Virtual Fixtures Preview</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -120,9 +120,9 @@
        <property name="geometry">
         <rect>
          <x>210</x>
-         <y>20</y>
+         <y>10</y>
          <width>61</width>
-         <height>16</height>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
@@ -133,9 +133,9 @@
        <property name="geometry">
         <rect>
          <x>260</x>
-         <y>20</y>
-         <width>101</width>
-         <height>22</height>
+         <y>10</y>
+         <width>111</width>
+         <height>28</height>
         </rect>
        </property>
        <item>
@@ -158,9 +158,9 @@
        <property name="geometry">
         <rect>
          <x>260</x>
-         <y>70</y>
+         <y>50</y>
          <width>61</width>
-         <height>20</height>
+         <height>28</height>
         </rect>
        </property>
       </widget>
@@ -168,9 +168,9 @@
        <property name="geometry">
         <rect>
          <x>210</x>
-         <y>70</y>
-         <width>31</width>
-         <height>16</height>
+         <y>50</y>
+         <width>41</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
@@ -181,9 +181,9 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>20</y>
-         <width>161</width>
-         <height>23</height>
+         <y>10</y>
+         <width>160</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
@@ -194,13 +194,26 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>70</y>
-         <width>161</width>
-         <height>23</height>
+         <y>50</y>
+         <width>160</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
         <string>Set End Point</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_AFC">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>90</y>
+         <width>171</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Admittance Feed Control</string>
        </property>
       </widget>
      </widget>
@@ -213,21 +226,21 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>161</width>
-         <height>23</height>
+         <width>160</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
-        <string>Free</string>
+        <string>Move Robot manually</string>
        </property>
       </widget>
       <widget class="QPushButton" name="GetFiducial">
        <property name="geometry">
         <rect>
-         <x>190</x>
-         <y>10</y>
-         <width>231</width>
-         <height>23</height>
+         <x>10</x>
+         <y>50</y>
+         <width>160</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
@@ -237,10 +250,10 @@
       <widget class="QSpinBox" name="spinBox_MW">
        <property name="geometry">
         <rect>
-         <x>360</x>
-         <y>40</y>
+         <x>130</x>
+         <y>90</y>
          <width>41</width>
-         <height>21</height>
+         <height>28</height>
         </rect>
        </property>
        <property name="minimum">
@@ -253,14 +266,27 @@
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>240</x>
-         <y>40</y>
+         <x>20</x>
+         <y>90</y>
          <width>121</width>
-         <height>21</height>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
         <string>Number of Points</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="GoToFiducialRegistration">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>10</y>
+         <width>140</width>
+         <height>70</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Fiducial Registration</string>
        </property>
       </widget>
      </widget>
@@ -273,8 +299,8 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>161</width>
-         <height>23</height>
+         <width>160</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
@@ -285,9 +311,9 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>40</y>
-         <width>161</width>
-         <height>23</height>
+         <y>50</y>
+         <width>160</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="text">
@@ -298,9 +324,9 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>70</y>
-         <width>161</width>
-         <height>23</height>
+         <y>90</y>
+         <width>160</width>
+         <height>28</height>
         </rect>
        </property>
        <property name="layoutDirection">
@@ -308,6 +334,32 @@
        </property>
        <property name="text">
         <string>Move to Target Point</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="MoveManual">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>10</y>
+         <width>160</width>
+         <height>70</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Move Robot Manually</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="BackToStart">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>90</y>
+         <width>160</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Back to Startpose</string>
        </property>
       </widget>
      </widget>
@@ -604,6 +656,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>MoveManual</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>onClickGravComp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>288</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BackToStart</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>onClickBackToStart()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>346</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>GoToFiducialRegistration</sender>
+   <signal>clicked()</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot>onClickFiducialRegistration()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>281</x>
+     <y>288</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_AFC</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>qSlicerLightWeightRobotIGTFooBarWidget</receiver>
+   <slot> onCheckStatusChangeAFC(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>343</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>setMRMLScene(vtkMRMLScene *newScene)</slot>
@@ -622,8 +738,11 @@
   <slot>onClickMoveToEntrancePoint()</slot>
   <slot>onClickMoveToTargetPoint()</slot>
   <slot>onClickShowTCPForce()</slot>
+  <slot>onClickBackToStart()</slot>
+  <slot>onClickFiducialRegistration()</slot>
   <slot>onSelectionChangedVFphi(QString)</slot>
   <slot>onIndexChangedVFtype(int)</slot>
   <slot> onCheckStatusChangedVFPreview(bool)</slot>
+  <slot> onCheckStatusChangeAFC(bool)</slot>
  </slots>
 </ui>

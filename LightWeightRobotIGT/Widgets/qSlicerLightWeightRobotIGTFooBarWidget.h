@@ -34,6 +34,7 @@
 // FooBar Widgets includes
 #include "qSlicerLightWeightRobotIGTModuleWidgetsExport.h"
 #include "qSlicerWidget.h"
+#include "qSlicerModulesMenu.h"
 
 
 class qSlicerLightWeightRobotIGTFooBarWidgetPrivate;
@@ -91,6 +92,7 @@ class Q_SLICER_MODULE_LIGHTWEIGHTROBOTIGT_WIDGETS_EXPORT qSlicerLightWeightRobot
 {
   Q_OBJECT
 public:
+  //qSlicerModulesMenu* ModulesMenu;
   typedef qSlicerWidget Superclass;
   qSlicerLightWeightRobotIGTFooBarWidget(QWidget *parent=0);
   virtual ~qSlicerLightWeightRobotIGTFooBarWidget();
@@ -98,6 +100,7 @@ public:
   VirtualFixturesOptions VFOptions;
   bool StartPointActive;
   bool EndPointActive;
+  bool HomePointActive;
   PathImpOptions PIOptions;
   MoveToPoseOptions MPOptions;
   QScopedPointer<qSlicerLightWeightRobotIGTFooBarWidgetPrivate> d_ptr;	
@@ -122,7 +125,10 @@ public slots:
   virtual void onIndexChangedVFtype(int);
   virtual void onClickSetEndPoint();
   virtual void onClickSetStartPoint();
+  virtual void onClickBackToStart();
+  virtual void onClickFiducialRegistration();
   virtual void onCheckStatusChangedVFPreview(bool checked);
+  virtual void onCheckStatusChangedAFC(bool checked);
 
 protected slots:
 
