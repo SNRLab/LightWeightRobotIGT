@@ -1061,7 +1061,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onCheckStatusChangedVFPreview(bool 
 	{
 		if(vtkMRMLModelDisplayNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("VF_DisplayTemp"))){
 			vtkMRMLModelDisplayNode *VFmodelDisplay = vtkMRMLModelDisplayNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("VF_DisplayTemp"));
-			VFmodelDisplay->Reset();
+			VFmodelDisplay->Reset(0);
 			VFmodelDisplay->SetOpacity(0);
 		}
 	}
