@@ -78,13 +78,13 @@ public:
                                   unsigned long /*event*/, 
                                   void * /*callData*/ );
 
-  //BTX
+#ifndef __VTK_WRAP__
   virtual void OnNodeReferenceAdded(vtkMRMLNodeReference *reference);
 
   virtual void OnNodeReferenceRemoved(vtkMRMLNodeReference *reference);
 
   virtual void OnNodeReferenceModified(vtkMRMLNodeReference *reference);
-  //ETX
+#endif // __VTK_WRAP__
 
   enum
     {

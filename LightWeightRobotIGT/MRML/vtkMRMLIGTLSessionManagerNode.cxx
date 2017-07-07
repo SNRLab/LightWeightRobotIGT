@@ -1151,8 +1151,8 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		vtkMRMLModelNode *model = vtkMRMLModelNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("VF_Temp"));
 		vtkMRMLModelDisplayNode *modelDisplay = vtkMRMLModelDisplayNode::SafeDownCast(this->GetScene()->GetFirstNodeByName("VF_DisplayTemp"));
 		
-		model->Reset();
-		//modelDisplay->Reset();
+		model->Reset(0);
+		//modelDisplay->Reset(0);
 
 		modelDisplay->SetColor(0,0,1) ;
 		modelDisplay->SliceIntersectionVisibilityOn();
