@@ -596,8 +596,8 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* clie
 				}
 			}
 		  if(strcmp(AckStateString.c_str(), "VirtualFixtures")== 0 ){
-					int pos = TmpACK.find_first_of(";",AckStateString.length()+1);
-					if(pos<= TmpACK.length()){
+					unsigned int pos = TmpACK.find_first_of(";",AckStateString.length()+1);
+					if(pos <= TmpACK.length()){
 					  std::string VFTypeString = TmpACK.substr(AckStateString.length()+1 , pos - (AckStateString.length()+1));
 						vtkSmartPointer<vtkMRMLModelDisplayNode> VirtualFixture =vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
 					  if(strcmp(VFTypeString.c_str(), "plane")== 0){
@@ -681,7 +681,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* clie
 	  }
 	  std::string AckUIDString = TmpACK.substr(pos +1 , Lastpos-1);
 
-	  long AckUID = atol(AckUIDString.c_str());
+	  unsigned long AckUID = atol(AckUIDString.c_str());
 	  if(AckUID == thisClass->UID){
 		  vtkMRMLScene* scene = thisClass->GetScene();
 		  if (!scene) 
