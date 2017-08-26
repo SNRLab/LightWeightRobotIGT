@@ -26,7 +26,10 @@
 #include "qSlicerLightWeightRobotIGTModuleWidget.h"
 
 //-----------------------------------------------------------------------------
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtPlugin>
 Q_EXPORT_PLUGIN2(qSlicerLightWeightRobotIGTModule, qSlicerLightWeightRobotIGTModule);
+#endif
 
 //-----------------------------------------------------------------------------
 /// \ingroup Slicer_QtModules_ExtensionTemplate
