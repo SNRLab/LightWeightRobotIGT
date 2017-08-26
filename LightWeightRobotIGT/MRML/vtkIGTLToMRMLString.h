@@ -19,7 +19,7 @@ class VTK_SLICER_LIGHTWEIGHTROBOTIGT_MODULE_MRML_EXPORT vtkIGTLToMRMLString : pu
  public:
 
   static vtkIGTLToMRMLString *New();
-  vtkTypeMacro(vtkIGTLToMRMLString,vtkObject);
+  vtkTypeMacro(vtkIGTLToMRMLString,vtkIGTLToMRMLBase);
 
   void PrintSelf(ostream& os, vtkIndent indent);
 

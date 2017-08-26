@@ -30,7 +30,7 @@ class VTK_SLICER_LIGHTWEIGHTROBOTIGT_MODULE_MRML_EXPORT vtkIGTLToMRMLPoint : pub
  public:
 
   static vtkIGTLToMRMLPoint *New();
-  vtkTypeMacro(vtkIGTLToMRMLPoint,vtkObject);
+  vtkTypeMacro(vtkIGTLToMRMLPoint,vtkIGTLToMRMLBase);
 
   void PrintSelf(ostream& os, vtkIndent indent);
 
