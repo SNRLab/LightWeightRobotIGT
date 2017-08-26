@@ -46,6 +46,8 @@ class VTK_SLICER_LIGHTWEIGHTROBOTIGT_MODULE_MRML_EXPORT vtkIGTLToMRMLPoint : pub
  protected:
   vtkIGTLToMRMLPoint();
   ~vtkIGTLToMRMLPoint();
+  vtkIGTLToMRMLPoint(const vtkIGTLToMRMLPoint&);
+  void operator=(const vtkIGTLToMRMLPoint&);
 
  protected:
   igtl::PointMessage::Pointer OutPointMsg;

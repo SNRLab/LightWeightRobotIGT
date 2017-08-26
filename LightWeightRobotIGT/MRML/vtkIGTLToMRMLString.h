@@ -42,6 +42,8 @@ class VTK_SLICER_LIGHTWEIGHTROBOTIGT_MODULE_MRML_EXPORT vtkIGTLToMRMLString : pu
  protected:
   vtkIGTLToMRMLString();
   ~vtkIGTLToMRMLString();
+  vtkIGTLToMRMLString(const vtkIGTLToMRMLString&);
+  void operator=(const vtkIGTLToMRMLString&);
 
  protected:
   //BTX

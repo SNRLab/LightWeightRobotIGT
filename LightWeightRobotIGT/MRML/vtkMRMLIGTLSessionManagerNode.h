@@ -103,11 +103,6 @@ public:
   void VirtFixOn(std::string name);
   void VirtFixOff();
   bool finish;
-    
-	vtkMRMLIGTLSessionManagerNode();
-  ~vtkMRMLIGTLSessionManagerNode();
-  vtkMRMLIGTLSessionManagerNode(const vtkMRMLIGTLSessionManagerNode&);
-  void operator=(const vtkMRMLIGTLSessionManagerNode&);
 
   //----------------------------------------------------------------
   // Reference role strings
@@ -152,6 +147,11 @@ public:
   vtkSetStringMacro(AcknowledgeStringNodeIDInternal);
   vtkGetStringMacro(AcknowledgeStringNodeIDInternal);
 
+protected:
+	vtkMRMLIGTLSessionManagerNode();
+  ~vtkMRMLIGTLSessionManagerNode();
+  vtkMRMLIGTLSessionManagerNode(const vtkMRMLIGTLSessionManagerNode&);
+  void operator=(const vtkMRMLIGTLSessionManagerNode&);
 
   vtkIGTLToMRMLString * StringMessageConverter;
 
