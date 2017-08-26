@@ -829,7 +829,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::MoveVF(){
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFx(QString editText){
 	
-		PIOptions.X = editText.toAscii().data();
+		PIOptions.X = editText.toLatin1().data();
 		Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 	double  xyz[3] = {0};
 // Fiducial auswählen, falls vorhanden und Koordianten aktualisieren
@@ -890,7 +890,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFx(QString editT
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFy(QString editText){
 
-	PIOptions.Y = editText.toAscii().data();
+	PIOptions.Y = editText.toLatin1().data();
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 		double  xyz[3] = {0};
 // Fiducial auswählen, falls vorhanden und Koordianten aktualisieren
@@ -950,7 +950,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFy(QString editT
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFz(QString editText){
 
-	PIOptions.Z = editText.toAscii().data();
+	PIOptions.Z = editText.toLatin1().data();
 
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 		double  xyz[3] = {0};
@@ -1010,24 +1010,24 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFz(QString editT
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFnx(QString editText){
-	VFOptions.nX = editText.toAscii().data();
+	VFOptions.nX = editText.toLatin1().data();
 	MoveVF();
 }
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFny(QString editText){
-	VFOptions.nY = editText.toAscii().data();
+	VFOptions.nY = editText.toLatin1().data();
 	MoveVF();
 }
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFnz(QString editText){
-	VFOptions.nZ = editText.toAscii().data();
+	VFOptions.nZ = editText.toLatin1().data();
 	MoveVF();
 }
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFphi(QString editText){
-	VFOptions.phi = editText.toAscii().data();
+	VFOptions.phi = editText.toLatin1().data();
 	MoveVF();
 }
 //-----------------------------------------------------------------------------
@@ -1057,7 +1057,7 @@ void FiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data
 //---------------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPx(QString editText){
 		
-	MPOptions.X = editText.toAscii().data();
+	MPOptions.X = editText.toLatin1().data();
     Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 	double  xyz[3] = {0};
 // Fiducial auswählen, falls vorhanden und Koordianten aktualisieren
@@ -1111,7 +1111,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPx(QString editT
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPy(QString editText){
 	
-	MPOptions.Y = editText.toAscii().data();
+	MPOptions.Y = editText.toLatin1().data();
 
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 	double  xyz[3] = {0};
@@ -1165,7 +1165,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPy(QString editT
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPz(QString editText){
 	
 
-	MPOptions.Z = editText.toAscii().data();
+	MPOptions.Z = editText.toLatin1().data();
 
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 	double  xyz[3] = {0};
@@ -1215,17 +1215,17 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPz(QString editT
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPA(QString editText){
-	MPOptions.A = editText.toAscii().data();
+	MPOptions.A = editText.toLatin1().data();
 }
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPB(QString editText){
-	MPOptions.B = editText.toAscii().data();
+	MPOptions.B = editText.toLatin1().data();
 }
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPC(QString editText){
-	MPOptions.C = editText.toAscii().data();
+	MPOptions.C = editText.toLatin1().data();
 }
 
 

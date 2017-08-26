@@ -838,7 +838,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFphi(QString edi
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 		vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
   vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
-	VFOptions.phi = editText.toAscii().data();
+	VFOptions.phi = editText.toLatin1().data();
 	snode->UpdateVirtualFixturePreview();
 }
 
