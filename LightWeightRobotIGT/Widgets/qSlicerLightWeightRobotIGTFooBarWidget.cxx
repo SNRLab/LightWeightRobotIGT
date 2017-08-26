@@ -300,18 +300,18 @@ T_CT_BaseOrientation->SetMatrixTransformToParent(T_CT_Base_mat);
 VirtualFixturesPositionBaseFrame = T_CT_Base->GetTransformFromParent()->TransformPoint(VirtualFixturesPosition);
  VirtualFixturesNormalBaseFrame = T_CT_BaseOrientation->GetTransformFromParent()->TransformPoint(VirtualFixturesNormal);
   
-  if( snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PLANE){
+  if( snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PLANE){
 	  CommandString = "VirtualFixtures;" + VisualOptions.COFType+";plane;" + QString::number(VirtualFixturesPositionBaseFrame[0],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[1],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[2],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[0],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[1],'f', 8).toStdString() +";" + QString::number(VirtualFixturesNormalBaseFrame[2],'f', 8).toStdString()+";";
 
 
 
   }
-  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::CONE )
+  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::CONE )
   {
 	CommandString = "VirtualFixtures;" + VisualOptions.COFType+";cone;" + QString::number(VirtualFixturesPositionBaseFrame[0],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[1],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[2],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[0],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[1],'f', 8).toStdString() +";" + QString::number(VirtualFixturesNormalBaseFrame[2],'f', 8).toStdString()+";";
 
   }
-  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PATH)
+  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PATH)
   {
 	  CommandString = "PathImp;"+VisualOptions.COFType+";" + QString::number(VirtualFixturesPositionBaseFrame[0],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[1],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[2],'f', 8).toStdString()+ ";";
 	
@@ -1035,19 +1035,19 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onIndexChangedVFtype(int index){
     }
 	switch (index) {
 		 case 0:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PLANE;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PLANE;
 			d->lineEdit_VFphi->setEnabled(false);
 			 break;
 		 case 1:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::CONE;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::CONE;
 			 d->lineEdit_VFphi->setEnabled(true);
 			 break;
 		 case 2:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PATH;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PATH;
 			 d->lineEdit_VFphi->setEnabled(false);
 			 break;
 		 default:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PLANE;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PLANE;
 			 d->lineEdit_VFphi->setEnabled(false);
 			 break;
 		 }

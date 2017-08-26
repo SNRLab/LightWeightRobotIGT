@@ -59,7 +59,7 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
   this->SetConnectorNodeReferenceRole("connector");
   this->SetConnectorNodeReferenceMRMLAttributeName("connectorNodeRef");
 
-  this->CurrentVirtualFixtureType = VirtualFixtureType::PLANE;
+  this->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PLANE;
   this->ConeAngle = 90.0;
   
   this->DirectionVector[0]= 0;
@@ -1049,7 +1049,7 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		trans->SetScene(this->GetScene());
 		this->GetScene()->AddNode(trans);
 	}
-	if(this->CurrentVirtualFixtureType == VirtualFixtureType::CONE)
+	if(this->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::CONE)
 	{
 			
 		double height = 200; 
@@ -1067,12 +1067,12 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		
 		VFPolyData = cone->GetOutputPort();		
 	}
-	else if(this->CurrentVirtualFixtureType == VirtualFixtureType::PLANE)
+	else if(this->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PLANE)
 	{
 	
 		vtkSmartPointer<vtkRegularPolygonSource> planeb=vtkSmartPointer<vtkRegularPolygonSource>::New();	
 		
-		float size = 500;//  --> Hier Größe der Fläche anpassen
+		float size = 500;//  --> Hier Gr\F6\DFe der Fl\E4che anpassen
 		planeb->SetNormal(DirectionVector[0],DirectionVector[1],DirectionVector[2]);
 		planeb->SetCenter(this->VirtualFixtureVector[0],this->VirtualFixtureVector[1],this->VirtualFixtureVector[2]);
 		planeb->SetNumberOfSides(4);
@@ -1140,7 +1140,7 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		path->SetRadius(radius);
 		//Connect to transform...
 		path->SetCenter(0, 0 - height/2, 0);
-		path->SetResolution(50); // Auflösung des Kegels
+		path->SetResolution(50); // Aufl\F6sung des Kegels
 
 		VFPolyData = path->GetOutputPort();
 
@@ -1165,7 +1165,7 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 			//vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
 			//T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
 			//trans->SetAndObserveTransformNodeID( T_CT_Base->GetID());
-		if(!(this->CurrentVirtualFixtureType == VirtualFixtureType::PATH)){
+		if(!(this->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PATH)){
 				trans->SetMatrixTransformToParent(vtkMatrix4x4::New());
 			}
 			model->SetAndObserveTransformNodeID(trans->GetID());
