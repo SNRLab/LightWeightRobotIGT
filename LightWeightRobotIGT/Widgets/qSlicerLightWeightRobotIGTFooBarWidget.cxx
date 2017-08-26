@@ -187,10 +187,9 @@ qSlicerLightWeightRobotIGTFooBarWidget
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::
-setSessionManagerNode(vtkMRMLNode *node)
+setSessionManagerNode(vtkMRMLNode * node)
 {
-  
- 
+  Q_UNUSED(node);
 }
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::
@@ -718,7 +717,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetEndPoint(){
 			}
 			SliceOffset[3] = SliceOffset[3]+10;
 			vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-			int b = fiducial->SetFiducialCoordinates(SliceOffset);
+			/* int b = */fiducial->SetFiducialCoordinates(SliceOffset);
 			fiducial->SetName("EndPoint");
 			
 
@@ -794,7 +793,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetStartPoint(){
 			 std::cerr<< "SliceOffset: " <<SliceOffset[0] << " ; "<<SliceOffset[1]  << " ; " << SliceOffset[2] <<std::endl; 		
 
 			vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-			int b = fiducial->SetFiducialCoordinates(SliceOffset);
+			/* int b = */fiducial->SetFiducialCoordinates(SliceOffset);
 			fiducial->SetName("StartPoint");
 			
 
@@ -929,6 +928,8 @@ void qSlicerLightWeightRobotIGTFooBarWidget::CreateFiducial()
 //-------------------------------------------------------------------------------------------------------
 void TransformChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
 {
+  Q_UNUSED(event);
+  Q_UNUSED(call_data);
     qSlicerLightWeightRobotIGTFooBarWidget* thisClass = reinterpret_cast<qSlicerLightWeightRobotIGTFooBarWidget*>(client_data);
 
 	if(vtk_obj->GetClassName(),"vtkMRMLLinearTransformNode"){
@@ -967,7 +968,7 @@ void TransformChanged(vtkObject* vtk_obj, unsigned long event, void* client_data
 
 			// Fiducial erstellen
 			vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-   			int b = fiducial->SetFiducialCoordinates(fiducialCoordinates[0],fiducialCoordinates[1],fiducialCoordinates[2]); 
+   		/*int b = */fiducial->SetFiducialCoordinates(fiducialCoordinates[0],fiducialCoordinates[1],fiducialCoordinates[2]); 
 
 			// Falls Fid_list nicht vorhanden ist, diese Liste erstellen
 			if (!vtkMRMLAnnotationHierarchyNode::SafeDownCast(thisClass->mrmlScene()->GetFirstNodeByName("Fid_List"))) //
@@ -1189,7 +1190,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickStartCyclic(){
 		vtksys::SystemTools::Delay(500);
 		for(int k = 0;k<50; k++){
 			cnode->ImportDataFromCircularBuffer();
-			if(vtkMRMLNode* node = this->mrmlScene()->GetFirstNodeByName("ACK")){
+			if(this->mrmlScene()->GetFirstNodeByName("ACK")){
 				vtksys::SystemTools::Delay(50);
 				int r = snode->ObserveAcknowledgeString();
 				if(r){
@@ -1304,5 +1305,5 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickFiducialRegistration(){
 	
 }
 void qSlicerLightWeightRobotIGTFooBarWidget::onCheckStatusChangedAFC(bool checked){
-
+  Q_UNUSED(checked);
 }

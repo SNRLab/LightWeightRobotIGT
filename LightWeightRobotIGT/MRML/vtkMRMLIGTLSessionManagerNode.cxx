@@ -266,7 +266,7 @@ void vtkMRMLIGTLSessionManagerNode::AddAndObserveMessageNodeID(const char *messa
 
 //---------------------------------------------------------------------------
 void vtkMRMLIGTLSessionManagerNode::ProcessMRMLEvents ( vtkObject *caller,
-                                                  unsigned long event, 
+                                                  unsigned long vtkNotUsed(event),
                                                   void *vtkNotUsed(callData) )
 {
   // as retrieving the parent transform node can be costly (browse the scene)
@@ -443,7 +443,7 @@ int vtkMRMLIGTLSessionManagerNode::ObserveAcknowledgeString()
   //CallBack->Delete();
 }
 
-void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data)
+void NodeChanged(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* client_data, void* vtkNotUsed(call_data))
 {
 	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
 	vtkMRMLAnnotationTextNode* anode = reinterpret_cast<vtkMRMLAnnotationTextNode*>(vtk_obj);
@@ -742,7 +742,7 @@ void vtkMRMLIGTLSessionManagerNode::VirtFixOff()
 }
 
 
-void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
+void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* client_data, void* vtkNotUsed(call_data)) // Mittelung der Fiducialdaten
 {
 	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
 	if(vtk_obj->GetClassName(),"vtkMRMLAnnotationFiducialNode"){
@@ -891,7 +891,7 @@ void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj,
 	}
 }
 //-----------------------------------------------------------------------------
-void vtkMRMLIGTLSessionManagerNode::StartPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
+void vtkMRMLIGTLSessionManagerNode::StartPointFiducialModified(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* client_data, void* vtkNotUsed(call_data)) // Mittelung der Fiducialdaten
 {
 	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
 	if(vtk_obj->GetClassName(),"vtkMRMLAnnotationFiducialNode"){
@@ -1122,7 +1122,6 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		double alpha = atan2(nvec[2],nvec[1])* 180.0 / PI;
 		transform->RotateX(alpha);
 		transform->RotateZ(beta);
-		double* rotation = transform->GetOrientation();
 	
 		vtkSmartPointer<vtkMatrix4x4> mat = transform->GetMatrix();
 		mat = vtkMatrix4x4::SafeDownCast(mat);

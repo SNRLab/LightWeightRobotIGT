@@ -32,8 +32,9 @@ vtkIGTLToMRMLString
 
 
 
-void vtkIGTLToMRMLString::PrintSelf( ostream& os, vtkIndent indent )
+void vtkIGTLToMRMLString::PrintSelf( ostream& vtkNotUsed(os), vtkIndent vtkNotUsed(indent) )
 {
+  // XXX Implement (or remove) this function
 }
 
 
