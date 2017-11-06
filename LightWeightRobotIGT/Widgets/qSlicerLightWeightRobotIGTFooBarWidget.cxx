@@ -187,10 +187,9 @@ qSlicerLightWeightRobotIGTFooBarWidget
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::
-setSessionManagerNode(vtkMRMLNode *node)
+setSessionManagerNode(vtkMRMLNode * node)
 {
-  
- 
+  Q_UNUSED(node);
 }
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::
@@ -300,18 +299,18 @@ T_CT_BaseOrientation->SetMatrixTransformToParent(T_CT_Base_mat);
 VirtualFixturesPositionBaseFrame = T_CT_Base->GetTransformFromParent()->TransformPoint(VirtualFixturesPosition);
  VirtualFixturesNormalBaseFrame = T_CT_BaseOrientation->GetTransformFromParent()->TransformPoint(VirtualFixturesNormal);
   
-  if( snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PLANE){
+  if( snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PLANE){
 	  CommandString = "VirtualFixtures;" + VisualOptions.COFType+";plane;" + QString::number(VirtualFixturesPositionBaseFrame[0],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[1],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[2],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[0],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[1],'f', 8).toStdString() +";" + QString::number(VirtualFixturesNormalBaseFrame[2],'f', 8).toStdString()+";";
 
 
 
   }
-  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::CONE )
+  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::CONE )
   {
 	CommandString = "VirtualFixtures;" + VisualOptions.COFType+";cone;" + QString::number(VirtualFixturesPositionBaseFrame[0],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[1],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[2],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[0],'f', 8).toStdString() + ";" + QString::number(VirtualFixturesNormalBaseFrame[1],'f', 8).toStdString() +";" + QString::number(VirtualFixturesNormalBaseFrame[2],'f', 8).toStdString()+";";
 
   }
-  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PATH)
+  if(snode->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PATH)
   {
 	  CommandString = "PathImp;"+VisualOptions.COFType+";" + QString::number(VirtualFixturesPositionBaseFrame[0],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[1],'f', 8).toStdString() + ";" +  QString::number(VirtualFixturesPositionBaseFrame[2],'f', 8).toStdString()+ ";";
 	
@@ -718,7 +717,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetEndPoint(){
 			}
 			SliceOffset[3] = SliceOffset[3]+10;
 			vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-			int b = fiducial->SetFiducialCoordinates(SliceOffset);
+			/* int b = */fiducial->SetFiducialCoordinates(SliceOffset);
 			fiducial->SetName("EndPoint");
 			
 
@@ -794,7 +793,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickSetStartPoint(){
 			 std::cerr<< "SliceOffset: " <<SliceOffset[0] << " ; "<<SliceOffset[1]  << " ; " << SliceOffset[2] <<std::endl; 		
 
 			vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-			int b = fiducial->SetFiducialCoordinates(SliceOffset);
+			/* int b = */fiducial->SetFiducialCoordinates(SliceOffset);
 			fiducial->SetName("StartPoint");
 			
 
@@ -839,190 +838,9 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedVFphi(QString edi
 	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
 		vtkMRMLNode* node = d->SessionManagerNodeSelector->currentNode();
   vtkMRMLIGTLSessionManagerNode* snode = vtkMRMLIGTLSessionManagerNode::SafeDownCast(node);
-	VFOptions.phi = editText.toAscii().data();
+	VFOptions.phi = editText.toLatin1().data();
 	snode->UpdateVirtualFixturePreview();
 }
-//-----------------------------------------------------------------------------
-//---------------------------------------------------------------------------------
-/*void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPx(QString editText){
-		
-	MPOptions.X = editText.toAscii().data();
-    Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
-	double  xyz[3] = {0};
-// Fiducial auswählen, falls vorhanden und Koordianten aktualisieren
-	if(EndPointActive)
-	{
-	   vtkSmartPointer<vtkCallbackCommand> CallBack = vtkSmartPointer<vtkCallbackCommand>::New();
-	   CallBack->SetClientData(this);
- 	   CallBack->SetCallback(EndPointFiducialModified);  
-
-	if (!vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint")))   
-	{
-		vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-		xyz[0] = editText.toDouble();
-		int b = fiducial->SetFiducialCoordinates(xyz);
-		fiducial->SetName("EndPoint");
-
-		// Neue Fiducialliste erstellen, wenn nicht vorhanden
-		if (!vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("PathPoint_List")))
-		{
-		   d->annotationLogic->SetActiveHierarchyNodeID(vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("All Annotations"))->GetID());
-		   if( d->annotationLogic->AddHierarchy())
-					 d->annotationLogic->GetActiveHierarchyNode()->SetName("PathPoint_List");
-		}
-		else
-			d->annotationLogic->SetActiveHierarchyNodeID(vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("PathPoint_List"))->GetID());
-    
-	/*if(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"))
-			{
-				vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
-				T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
-				fiducial->SetAndObserveTransformNodeID(T_CT_Base->GetID());
-				
-			}*/
-	   /*fiducial->Initialize(this->mrmlScene());
-	   d->annotationLogic->GetActiveHierarchyNode()->SetAssociatedNodeID(fiducial->GetID());
-
-	   fiducial->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack); //add observer to fiducial
-	  d->MoveToTargetPoint->setEnabled(true);  d->MoveToEntrancePoint->setEnabled(true);    
-
-	}
-	
-	
-	else
-	 {	   
-           vtkMRMLAnnotationFiducialNode *fid = vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint"));
-		   fid->RemoveObserver(CallBack);
-		   fid->GetFiducialCoordinates (xyz);
-
-		   xyz[0] = editText.toDouble();
-		   fid->SetFiducialCoordinates(atof(MPOptions.X.c_str()),xyz[1],xyz[2]);
-		   fid->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack);
-		   
-	}
-	}
-	UpdateVirtualFixturePreview();
-}*/
-
-//-----------------------------------------------------------------------------
-/*void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPy(QString editText){
-	
-	MPOptions.Y = editText.toAscii().data();
-
-	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
-	double  xyz[3] = {0};
-	// Fiducial auswählen, falls vorhanden und Koordianten aktualisieren
-	if(EndPointActive)
-	{
-		vtkSmartPointer<vtkCallbackCommand> CallBack = vtkSmartPointer<vtkCallbackCommand>::New();
-        CallBack->SetClientData(this);
-   		CallBack->SetCallback(EndPointFiducialModified); 
-
-	if (!vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint")))   
-	{
-		vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-		int b = fiducial->SetFiducialCoordinates(xyz[0],atof(MPOptions.Y.c_str()),xyz[2]);
-		fiducial->SetName("EndPoint");
-
-		// Neue Fiducialliste erstellen, wenn nicht vorhanden
-		if (!vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("PathPoint_List")))
-		{
-		   d->annotationLogic->SetActiveHierarchyNodeID(vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("All Annotations"))->GetID());
-			if( d->annotationLogic->AddHierarchy())
-					 d->annotationLogic->GetActiveHierarchyNode()->SetName("PathPoint_List");
-		}
-		else
-			d->annotationLogic->SetActiveHierarchyNodeID(vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("PathPoint_List"))->GetID());
-	    /*if(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"))
-		{
-			vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
-			T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
-			fiducial->SetAndObserveTransformNodeID(T_CT_Base->GetID());
-			
-		}*/
-		/*fiducial->Initialize(this->mrmlScene());
-		d->annotationLogic->GetActiveHierarchyNode()->SetAssociatedNodeID(fiducial->GetID());
-
-		 
-
-	    fiducial->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack); //add observer to fiducial
-		d->MoveToTargetPoint->setEnabled(true);  d->MoveToEntrancePoint->setEnabled(true);  //MoveToPose Button aktivieren
-	}
-	// Falls End Point bereits vorhanden
-	
-	else
-	 {
-           vtkMRMLAnnotationFiducialNode *fid = vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint"));
-		   fid->RemoveObserver(CallBack);
-		   fid->GetFiducialCoordinates (xyz);
-		   fid->SetFiducialCoordinates(xyz[0],atof(MPOptions.Y.c_str()),xyz[2]);
-		   fid->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack);
-	}
-	}
-	UpdateVirtualFixturePreview();
-}*/
-
-//-----------------------------------------------------------------------------
-/*void qSlicerLightWeightRobotIGTFooBarWidget::onSelectionChangedMPz(QString editText){
-	
-
-	MPOptions.Z = editText.toAscii().data();
-
-	Q_D(qSlicerLightWeightRobotIGTFooBarWidget);
-	double  xyz[3] = {0};
-	// Fiducial auswählen, falls vorhanden und Koordianten aktualisieren
-	if(EndPointActive)
-	{
-				   
-    	vtkSmartPointer<vtkCallbackCommand> CallBack = vtkSmartPointer<vtkCallbackCommand>::New();
-	    CallBack->SetClientData(this);
-   	    CallBack->SetCallback(EndPointFiducialModified);  
-
-	if (!vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint")))   
-	{
-		vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-		int b = fiducial->SetFiducialCoordinates(xyz[0],xyz[1],atof(MPOptions.Z.c_str()));
-		fiducial->SetName("EndPoint");
-
-		// Neue Fiducialliste erstellen, wenn nicht vorhanden
-		if (!vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("PathPoint_List")))
-		{
-			d->annotationLogic->SetActiveHierarchyNodeID(vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("All Annotations"))->GetID());		  
-			if( d->annotationLogic->AddHierarchy())
-					 d->annotationLogic->GetActiveHierarchyNode()->SetName("PathPoint_List");
-		}
-		else
-			d->annotationLogic->SetActiveHierarchyNodeID(vtkMRMLAnnotationHierarchyNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint_List"))->GetID());
-	    
-		/*if(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"))
-		{
-			vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
-			T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
-			fiducial->SetAndObserveTransformNodeID(T_CT_Base->GetID());
-			
-		}*/
-		/*fiducial->Initialize(this->mrmlScene());
-	    d->annotationLogic->GetActiveHierarchyNode()->SetAssociatedNodeID(fiducial->GetID());
-
-
-	    fiducial->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack); //add observer to fiducial
-		d->MoveToTargetPoint->setEnabled(true);  d->MoveToEntrancePoint->setEnabled(true);   //MoveToPose Button aktivieren
-	}
-	// Falls End Point bereits vorhanden
-	
-	else
-	 {
-           vtkMRMLAnnotationFiducialNode *fid = vtkMRMLAnnotationFiducialNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("EndPoint"));
-		   fid->RemoveObserver(CallBack);
-		   fid->GetFiducialCoordinates (xyz);
-		   fid->SetFiducialCoordinates(xyz[0],xyz[1],atof(MPOptions.Z.c_str()));
-		   fid->AddObserver(vtkMRMLAnnotationFiducialNode::ControlPointModifiedEvent, CallBack); //add observer to fiducial
-	}
-	}
-	UpdateVirtualFixturePreview();
-}*/
-
-
 
 //-----------------------------------------------------------------------------
 void qSlicerLightWeightRobotIGTFooBarWidget::onIndexChangedVFtype(int index){
@@ -1035,19 +853,19 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onIndexChangedVFtype(int index){
     }
 	switch (index) {
 		 case 0:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PLANE;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PLANE;
 			d->lineEdit_VFphi->setEnabled(false);
 			 break;
 		 case 1:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::CONE;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::CONE;
 			 d->lineEdit_VFphi->setEnabled(true);
 			 break;
 		 case 2:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PATH;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PATH;
 			 d->lineEdit_VFphi->setEnabled(false);
 			 break;
 		 default:
-			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::VirtualFixtureType::PLANE;
+			 snode->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PLANE;
 			 d->lineEdit_VFphi->setEnabled(false);
 			 break;
 		 }
@@ -1110,6 +928,8 @@ void qSlicerLightWeightRobotIGTFooBarWidget::CreateFiducial()
 //-------------------------------------------------------------------------------------------------------
 void TransformChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
 {
+  Q_UNUSED(event);
+  Q_UNUSED(call_data);
     qSlicerLightWeightRobotIGTFooBarWidget* thisClass = reinterpret_cast<qSlicerLightWeightRobotIGTFooBarWidget*>(client_data);
 
 	if(vtk_obj->GetClassName(),"vtkMRMLLinearTransformNode"){
@@ -1148,7 +968,7 @@ void TransformChanged(vtkObject* vtk_obj, unsigned long event, void* client_data
 
 			// Fiducial erstellen
 			vtkSmartPointer<vtkMRMLAnnotationFiducialNode> fiducial = vtkSmartPointer<vtkMRMLAnnotationFiducialNode>::New(); 
-   			int b = fiducial->SetFiducialCoordinates(fiducialCoordinates[0],fiducialCoordinates[1],fiducialCoordinates[2]); 
+   		/*int b = */fiducial->SetFiducialCoordinates(fiducialCoordinates[0],fiducialCoordinates[1],fiducialCoordinates[2]); 
 
 			// Falls Fid_list nicht vorhanden ist, diese Liste erstellen
 			if (!vtkMRMLAnnotationHierarchyNode::SafeDownCast(thisClass->mrmlScene()->GetFirstNodeByName("Fid_List"))) //
@@ -1370,7 +1190,7 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickStartCyclic(){
 		vtksys::SystemTools::Delay(500);
 		for(int k = 0;k<50; k++){
 			cnode->ImportDataFromCircularBuffer();
-			if(vtkMRMLNode* node = this->mrmlScene()->GetFirstNodeByName("ACK")){
+			if(this->mrmlScene()->GetFirstNodeByName("ACK")){
 				vtksys::SystemTools::Delay(50);
 				int r = snode->ObserveAcknowledgeString();
 				if(r){
@@ -1485,5 +1305,5 @@ void qSlicerLightWeightRobotIGTFooBarWidget::onClickFiducialRegistration(){
 	
 }
 void qSlicerLightWeightRobotIGTFooBarWidget::onCheckStatusChangedAFC(bool checked){
-
+  Q_UNUSED(checked);
 }

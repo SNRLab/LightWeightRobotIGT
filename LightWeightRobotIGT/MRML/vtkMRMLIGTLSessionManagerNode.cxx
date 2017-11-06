@@ -59,7 +59,7 @@ vtkMRMLIGTLSessionManagerNode::vtkMRMLIGTLSessionManagerNode()
   this->SetConnectorNodeReferenceRole("connector");
   this->SetConnectorNodeReferenceMRMLAttributeName("connectorNodeRef");
 
-  this->CurrentVirtualFixtureType = VirtualFixtureType::PLANE;
+  this->CurrentVirtualFixtureType = vtkMRMLIGTLSessionManagerNode::PLANE;
   this->ConeAngle = 90.0;
   
   this->DirectionVector[0]= 0;
@@ -266,7 +266,7 @@ void vtkMRMLIGTLSessionManagerNode::AddAndObserveMessageNodeID(const char *messa
 
 //---------------------------------------------------------------------------
 void vtkMRMLIGTLSessionManagerNode::ProcessMRMLEvents ( vtkObject *caller,
-                                                  unsigned long event, 
+                                                  unsigned long vtkNotUsed(event),
                                                   void *vtkNotUsed(callData) )
 {
   // as retrieving the parent transform node can be costly (browse the scene)
@@ -443,7 +443,7 @@ int vtkMRMLIGTLSessionManagerNode::ObserveAcknowledgeString()
   //CallBack->Delete();
 }
 
-void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data)
+void NodeChanged(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* client_data, void* vtkNotUsed(call_data))
 {
 	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
 	vtkMRMLAnnotationTextNode* anode = reinterpret_cast<vtkMRMLAnnotationTextNode*>(vtk_obj);
@@ -596,8 +596,8 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 				}
 			}
 		  if(strcmp(AckStateString.c_str(), "VirtualFixtures")== 0 ){
-					int pos = TmpACK.find_first_of(";",AckStateString.length()+1);
-					if(pos<= TmpACK.length()){
+					unsigned int pos = TmpACK.find_first_of(";",AckStateString.length()+1);
+					if(pos <= TmpACK.length()){
 					  std::string VFTypeString = TmpACK.substr(AckStateString.length()+1 , pos - (AckStateString.length()+1));
 						vtkSmartPointer<vtkMRMLModelDisplayNode> VirtualFixture =vtkSmartPointer<vtkMRMLModelDisplayNode>::New();
 					  if(strcmp(VFTypeString.c_str(), "plane")== 0){
@@ -681,7 +681,7 @@ void NodeChanged(vtkObject* vtk_obj, unsigned long event, void* client_data, voi
 	  }
 	  std::string AckUIDString = TmpACK.substr(pos +1 , Lastpos-1);
 
-	  long AckUID = atol(AckUIDString.c_str());
+	  unsigned long AckUID = atol(AckUIDString.c_str());
 	  if(AckUID == thisClass->UID){
 		  vtkMRMLScene* scene = thisClass->GetScene();
 		  if (!scene) 
@@ -742,7 +742,7 @@ void vtkMRMLIGTLSessionManagerNode::VirtFixOff()
 }
 
 
-void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
+void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* client_data, void* vtkNotUsed(call_data)) // Mittelung der Fiducialdaten
 {
 	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
 	if(vtk_obj->GetClassName(),"vtkMRMLAnnotationFiducialNode"){
@@ -891,7 +891,7 @@ void vtkMRMLIGTLSessionManagerNode::EndPointFiducialModified(vtkObject* vtk_obj,
 	}
 }
 //-----------------------------------------------------------------------------
-void vtkMRMLIGTLSessionManagerNode::StartPointFiducialModified(vtkObject* vtk_obj, unsigned long event, void* client_data, void* call_data) // Mittelung der Fiducialdaten
+void vtkMRMLIGTLSessionManagerNode::StartPointFiducialModified(vtkObject* vtk_obj, unsigned long vtkNotUsed(event), void* client_data, void* vtkNotUsed(call_data)) // Mittelung der Fiducialdaten
 {
 	vtkMRMLIGTLSessionManagerNode* thisClass = reinterpret_cast<vtkMRMLIGTLSessionManagerNode*>(client_data);
 	if(vtk_obj->GetClassName(),"vtkMRMLAnnotationFiducialNode"){
@@ -1049,7 +1049,7 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		trans->SetScene(this->GetScene());
 		this->GetScene()->AddNode(trans);
 	}
-	if(this->CurrentVirtualFixtureType == VirtualFixtureType::CONE)
+	if(this->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::CONE)
 	{
 			
 		double height = 200; 
@@ -1067,12 +1067,12 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		
 		VFPolyData = cone->GetOutputPort();		
 	}
-	else if(this->CurrentVirtualFixtureType == VirtualFixtureType::PLANE)
+	else if(this->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PLANE)
 	{
 	
 		vtkSmartPointer<vtkRegularPolygonSource> planeb=vtkSmartPointer<vtkRegularPolygonSource>::New();	
 		
-		float size = 500;//  --> Hier Größe der Fläche anpassen
+		float size = 500;//  --> Hier Gr\F6\DFe der Fl\E4che anpassen
 		planeb->SetNormal(DirectionVector[0],DirectionVector[1],DirectionVector[2]);
 		planeb->SetCenter(this->VirtualFixtureVector[0],this->VirtualFixtureVector[1],this->VirtualFixtureVector[2]);
 		planeb->SetNumberOfSides(4);
@@ -1122,7 +1122,6 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		double alpha = atan2(nvec[2],nvec[1])* 180.0 / PI;
 		transform->RotateX(alpha);
 		transform->RotateZ(beta);
-		double* rotation = transform->GetOrientation();
 	
 		vtkSmartPointer<vtkMatrix4x4> mat = transform->GetMatrix();
 		mat = vtkMatrix4x4::SafeDownCast(mat);
@@ -1140,7 +1139,7 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 		path->SetRadius(radius);
 		//Connect to transform...
 		path->SetCenter(0, 0 - height/2, 0);
-		path->SetResolution(50); // Auflösung des Kegels
+		path->SetResolution(50); // Aufl\F6sung des Kegels
 
 		VFPolyData = path->GetOutputPort();
 
@@ -1165,7 +1164,7 @@ void vtkMRMLIGTLSessionManagerNode::UpdateVirtualFixturePreview(){
 			//vtkSmartPointer<vtkMRMLLinearTransformNode> T_CT_Base=vtkSmartPointer<vtkMRMLLinearTransformNode>::New();
 			//T_CT_Base= vtkMRMLLinearTransformNode::SafeDownCast(this->mrmlScene()->GetFirstNodeByName("T_CT_Base"));
 			//trans->SetAndObserveTransformNodeID( T_CT_Base->GetID());
-		if(!(this->CurrentVirtualFixtureType == VirtualFixtureType::PATH)){
+		if(!(this->CurrentVirtualFixtureType == vtkMRMLIGTLSessionManagerNode::PATH)){
 				trans->SetMatrixTransformToParent(vtkMatrix4x4::New());
 			}
 			model->SetAndObserveTransformNodeID(trans->GetID());
